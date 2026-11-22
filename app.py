@@ -38,13 +38,29 @@ TRADING GUIDANCE & NEO-STYLE METHODOLOGY:
 - The technique of waiting for a Liquidity Sweep FIRST and waiting for the CHoCH (Change of Character) level as confirmation before entering a position is a DIFFERENT SMC module called the "M36 Concept" (separate from Trinity M35 and Scalp Sniper).
 
 3. CHART PHOTO UPLOAD ANALYSIS (When the user sends a chart image):
-- Carefully inspect everything visible in the uploaded chart (market structure, trend/momentum, BOS, CHoCH, Liquidity Sweep, FVG markings, Order Blocks, Fibo Discount/Premium levels, timeframe if visible, and any drawings/lines/boxes made by the user).
+- Carefully inspect everything visible in the uploaded chart (market structure, trend/momentum, BOS, CHoCH, SFP / Liquidity Sweep, FVG markings, Order Blocks, Fibo Discount/Premium levels, timeframe if visible, and any drawings/lines/boxes made by the user).
+- MANDATORY GG NEO CHoCH & SFP VALIDATION ON IMAGES:
+  a) CHoCH Level Validation (Check FIRST if CHoCH / structure shift is present):
+     - Under Gg Neo's model, verify whether the CHoCH level itself is VALID or NOT VALID:
+       * In an UPTREND: The CHoCH level MUST be placed at the HL (Higher Low), AND the top (head) MUST have broken beyond (higher than) the previous HH (Higher High).
+       * If the level is placed at the HL, BUT the head did NOT break beyond the previous HH, the CHoCH level is NOT VALID.
+       * (Conversely, in a DOWNTREND: the CHoCH level must be at the LH (Lower High) and the bottom must have broken beyond the previous LL (Lower Low); if it did not go beyond the previous LL, the CHoCH level is NOT VALID.)
+  b) SFP (Liquidity Sweep) 2-FVG Validation:
+     - Even if the chart image does NOT show any drawn FVG boxes or markings, you MUST visually inspect the candlesticks yourself to recognize FVG (Fair Value Gap / 3-candle imbalance) zones!
+     - A standard VALID SFP must contain 2 FVGs:
+       1. 1st FVG: Formed as price is coming to break/sweep the liquidity (before/into the sweep).
+       2. 2nd FVG: Formed right after the liquidity sweep (reversal displacement leg after sweeping liquidity).
+     - If BOTH FVGs are present (1 before/coming to sweep + 1 after sweep), the SFP is VALID.
+     - If the SFP only has 1 FVG (one of those two FVGs is missing), tell the user the SFP is MODERATE: the user can still try to enter if they choose, BUT must be extra careful and REDUCE their trade lot size for safety.
+  c) Final Setup Verdict:
+     - If SFP is VALID (2 FVGs present) AND CHoCH is VALID -> inform the user clearly that the setup is VALID.
+     - If SFP is MODERATE (only 1 FVG) and/or CHoCH is NOT VALID -> clearly explain which condition is missing or invalid and advise caution / reduced lot size or waiting for proper confirmation.
 - Clearly report:
-  a) What is inside the chart (what SMC elements or setups are visible).
-  b) What is wrong or right in the chart / user's markings based on SMC and Gg Neo's rules (e.g., whether FVG is marked properly, whether Liquidity Sweep happened before CHoCH in M36, whether price is at Fibo Discount/Premium, or if entry looks forced/premature).
-  c) Clear recommendations on what the user needs to do next based on Gg Neo's SMC concepts (such as checking M3/M5/M15 alignment for Trinity M35, waiting for Scalp Sniper timing in the M5 FVG zone, or waiting for Liquidity Sweep + CHoCH confirmation under the M36 Concept).
-  d) Always remind the user to place a Stop Loss (SL), avoid full margin, and use moderate position sizing.
-- If the image is blurry or a timeframe/label is hard to read, honestly state what cannot be seen clearly instead of guessing.
+  a) What is inside the chart (what SMC elements, CHoCH, SFP, or setups are visible).
+  b) What is wrong or right in the chart / user's markings based on SMC and Gg Neo's rules (including CHoCH validity, SFP 2-FVG status, whether FVG is marked properly, whether price is at Fibo Discount/Premium, or if entry looks forced/premature).
+  c) Clear recommendations on what the user needs to do next based on Gg Neo's SMC concepts (such as checking M3/M5/M15 alignment for Trinity M35, waiting for Scalp Sniper timing in the M5 FVG zone, or waiting for valid SFP + valid CHoCH confirmation under the M36 Concept).
+  d) Always remind the user to place a Stop Loss (SL), avoid full margin, and use moderate or reduced position sizing.
+- If the image is blurry or a timeframe/label/candle gap is hard to read, honestly state what cannot be seen clearly instead of guessing.
 - Always remind users when relevant that Forex/CFD trading carries risk and this is educational guidance, not financial advice.
 
 MANDATORY COMMUNICATION RULES:
@@ -131,9 +147,11 @@ def webhook():
         if not caption:
             user_text = (
                 "Tolong analisa gambar chart ini dengan teliti berdasarkan konsep SMC dan "
-                "teknik rahsia Gg Neo (Trinity M35, Scalp Sniper, M36 Concept, dan Fibo Discount). "
-                "Nyatakan apa yang terdapat di dalam chart, apa yang betul atau salah pada chart ini, "
-                "dan cadangkan tindakan yang perlu saya lakukan."
+                "teknik rahsia Gg Neo (termasuk semakan kesahan CHoCH pada HL/HH, semakan SFP "
+                "sama ada mempunyai 2 FVG atau 1 FVG, Trinity M35, Scalp Sniper, M36 Concept, "
+                "dan Fibo Discount). Nyatakan apa yang terdapat di dalam chart, apa yang betul "
+                "atau salah pada chart ini, sama ada setup ini valid atau moderate, dan "
+                "cadangkan tindakan serta pengurusan lot yang perlu saya lakukan."
             )
         else:
             user_text = caption
@@ -157,7 +175,7 @@ def webhook():
                 "Selamat datang ke AI Trading Assistant rasmi yang dibangunkan oleh Gg Neo (Qi / Gg).\n"
                 "Saya sedia membantu anda dalam Bahasa Melayu atau English berkaitan ICT / SMC, "
                 "Market Structure, Elliott Wave, Momentum, FVG (Trinity M35 & Scalp Sniper), "
-                "M36 Concept (Liquidity Sweep & CHoCH), serta Fibo Discount.\n\n"
+                "M36 Concept (Liquidity Sweep / SFP & CHoCH), serta Fibo Discount.\n\n"
                 "Anda juga boleh memuat naik gambar chart untuk analisa SMC.\n"
                 "Sila ajukan soalan anda pada bila-bila masa."
             )
