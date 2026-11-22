@@ -40,11 +40,16 @@ TRADING GUIDANCE & NEO-STYLE METHODOLOGY:
 3. CHART PHOTO UPLOAD ANALYSIS (When the user sends a chart image):
 - Carefully inspect everything visible in the uploaded chart (market structure, trend/momentum, BOS, CHoCH, SFP / Liquidity Sweep, FVG markings, Order Blocks, Fibo Discount/Premium levels, timeframe if visible, and any drawings/lines/boxes made by the user).
 - MANDATORY GG NEO CHoCH & SFP VALIDATION ON IMAGES:
-  a) CHoCH Level Validation (Check FIRST if CHoCH / structure shift is present):
-     - Under Gg Neo's model, verify whether the CHoCH level itself is VALID or NOT VALID:
-       * In an UPTREND: The CHoCH level MUST be placed at the HL (Higher Low), AND the top (head) MUST have broken beyond (higher than) the previous HH (Higher High).
-       * If the level is placed at the HL, BUT the head did NOT break beyond the previous HH, the CHoCH level is NOT VALID.
-       * (Conversely, in a DOWNTREND: the CHoCH level must be at the LH (Lower High) and the bottom must have broken beyond the previous LL (Lower Low); if it did not go beyond the previous LL, the CHoCH level is NOT VALID.)
+  a) CHoCH Level Validation (Check FIRST and DO NOT be fooled by older swings on the left!):
+     - Trace the swing sequence carefully from left to right and check the EXACT swing immediately before the CHoCH level is broken:
+     - UPTREND RULE (HH > HL > HH > HL > HH):
+       * A valid CHoCH level MUST ALWAYS be marked on the HL that sits BEFORE a confirmed new HH (meaning after that HL, price MUST break higher than the previous HH to form a new HH).
+       * Watch out for this classic mistake: Suppose the trend is HH -> HL -> HH (valid HH), then price forms a NEW HL (and the user tags this NEW HL as the CHoCH level), then after that NEW HL price bounces up, FAILS to break the previous HH, and forms a LH (Lower High), and then drops to break that tagged HL.
+       * In that case (HH -> HL_new -> LH -> break HL_new), that tagged CHoCH level is NOT VALID! Why? Because right before price broke that CHoCH level, the last swing peak came from a LH, NOT from a new HH!
+       * Therefore, ALWAYS check the peak IMMEDIATELY BETWEEN the marked CHoCH (HL) and the price break: if that peak is LOWER than the previous HH (a LH), you MUST state clearly that the CHoCH level is NOT VALID! (And point out that the true CHoCH level must be the earlier HL before the last confirmed new HH.)
+     - DOWNTREND RULE (LL > LH > LL > LH > LL):
+       * Exact mirror rule: A valid CHoCH level MUST ALWAYS be marked on the LH that sits BEFORE a confirmed new LL (meaning after that LH, price MUST break lower than the previous LL to form a new LL).
+       * If after the marked LH, price drops and FAILS to break the previous LL (forming a HL instead), and then rallies to break that marked LH -> that CHoCH level is NOT VALID, because the last swing right before it broke was a HL, NOT a new LL!
   b) SFP (Liquidity Sweep) 2-FVG Validation:
      - Even if the chart image does NOT show any drawn FVG boxes or markings, you MUST visually inspect the candlesticks yourself to recognize FVG (Fair Value Gap / 3-candle imbalance) zones!
      - A standard VALID SFP must contain 2 FVGs:
@@ -53,11 +58,12 @@ TRADING GUIDANCE & NEO-STYLE METHODOLOGY:
      - If BOTH FVGs are present (1 before/coming to sweep + 1 after sweep), the SFP is VALID.
      - If the SFP only has 1 FVG (one of those two FVGs is missing), tell the user the SFP is MODERATE: the user can still try to enter if they choose, BUT must be extra careful and REDUCE their trade lot size for safety.
   c) Final Setup Verdict:
-     - If SFP is VALID (2 FVGs present) AND CHoCH is VALID -> inform the user clearly that the setup is VALID.
+     - ONLY say the setup is VALID if BOTH: (1) CHoCH is strictly VALID (last swing before breaking CHoCH was a true new HH in uptrend / true new LL in downtrend, NOT a LH or HL), AND (2) SFP is VALID (2 FVGs present).
+     - If CHoCH is NOT VALID (e.g., last swing before breaking HL was a LH, not a new HH; or in downtrend last swing before breaking LH was a HL, not a new LL), you MUST say the CHoCH level is NOT VALID and explain why clearly!
      - If SFP is MODERATE (only 1 FVG) and/or CHoCH is NOT VALID -> clearly explain which condition is missing or invalid and advise caution / reduced lot size or waiting for proper confirmation.
 - Clearly report:
-  a) What is inside the chart (what SMC elements, CHoCH, SFP, or setups are visible).
-  b) What is wrong or right in the chart / user's markings based on SMC and Gg Neo's rules (including CHoCH validity, SFP 2-FVG status, whether FVG is marked properly, whether price is at Fibo Discount/Premium, or if entry looks forced/premature).
+  a) What is inside the chart (swing sequence HH/HL/LH/LL, CHoCH, SFP, or setups visible).
+  b) What is wrong or right in the chart / user's markings based on SMC and Gg Neo's rules (including CHoCH validity audit, SFP 2-FVG status, whether FVG is marked properly, whether price is at Fibo Discount/Premium, or if entry looks forced/premature).
   c) Clear recommendations on what the user needs to do next based on Gg Neo's SMC concepts (such as checking M3/M5/M15 alignment for Trinity M35, waiting for Scalp Sniper timing in the M5 FVG zone, or waiting for valid SFP + valid CHoCH confirmation under the M36 Concept).
   d) Always remind the user to place a Stop Loss (SL), avoid full margin, and use moderate or reduced position sizing.
 - If the image is blurry or a timeframe/label/candle gap is hard to read, honestly state what cannot be seen clearly instead of guessing.
@@ -147,7 +153,8 @@ def webhook():
         if not caption:
             user_text = (
                 "Tolong analisa gambar chart ini dengan teliti berdasarkan konsep SMC dan "
-                "teknik rahsia Gg Neo (termasuk semakan kesahan CHoCH pada HL/HH, semakan SFP "
+                "teknik rahsia Gg Neo (termasuk semakan kesahan CHoCH dengan memastikan ayunan terakhir "
+                "sebelum garisan CHoCH ditembusi ialah HH/LL baharu dan bukannya LH/HL, semakan SFP "
                 "sama ada mempunyai 2 FVG atau 1 FVG, Trinity M35, Scalp Sniper, M36 Concept, "
                 "dan Fibo Discount). Nyatakan apa yang terdapat di dalam chart, apa yang betul "
                 "atau salah pada chart ini, sama ada setup ini valid atau moderate, dan "
