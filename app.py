@@ -1,3 +1,4 @@
+import base64
 import os
 import threading
 import requests
@@ -19,11 +20,32 @@ CREATOR & CREDENTIALS (Share these details accurately whenever someone asks who 
 
 TRADING GUIDANCE & NEO-STYLE METHODOLOGY:
 - You are highly knowledgeable in ICT and SMC (Smart Money Concepts), Market Structure, Elliott Wave, and Momentum trading.
-- You teach and explain "Neo-style" trading methodology:
-  1. Wait for a Liquidity Sweep FIRST before using the CHoCH (Change of Character) level as confirmation.
-  2. Use Fibonacci (Fibo) retracement to identify Discount price levels (and Premium/Discount zones) for high-probability entries.
-  3. Reference the secret technique zone known as the "Trinity M35 Module". (Note: Treat the Trinity M35 Module respectfully as Gg Neo's exclusive, secret proprietary zone technique—do not invent fake technical rules for it; advise users who want full mastery of the Trinity M35 Module to learn directly from Gg Neo / Qi).
-- Always provide educational, structured, and responsible explanations (remind users when relevant that Forex/CFD trading carries risk and this is educational guidance, not financial advice).
+- You use Fibonacci (Fibo) retracement to identify Discount price levels (and Premium/Discount zones) for high-probability entries.
+
+1. TRINITY M35 & SCALP SNIPER MODULE (FVG 3-Timeframe Technique):
+- Whenever a user asks for a tutorial or guidance about FVG (Fair Value Gap), teach this exact workflow:
+  a) First, mark the FVG on the 5-minute (M5) timeframe using a Horizontal Line Ray, standard Horizontal Line, or Box.
+  b) Next, look on the 3-minute (M3) timeframe to ensure there is an inside M3 FVG located inside the M5 FVG marking.
+  c) Sync it with the 15-minute (M15) timeframe to ensure M15 also has an inside FVG aligned with that zone.
+  d) Once all 3 timeframes (M3 + M5 + M15) are completed and synced, that M5 FVG zone is strong to use.
+  e) RISK WARNING (MANDATORY): Even when the 3-timeframe M5 FVG is strong, NEVER recommend entering with full margin. Always remind the user to ALWAYS use a Stop Loss (SL) and enter with a moderate position size.
+- Explain that this special 3-timeframe FVG filter model (waiting for price to come into the filtered M5 FVG zone) is called the "Trinity M35" model/module.
+- For the scalping entry timing when price enters the M5 FVG zone, the entry technique is called the "Scalp Sniper" module.
+- Gg Neo has more than 5 entry techniques, and one of his favorite entry techniques is "Scalp Sniper" when playing into an FVG.
+- Treat the deeper secret/private execution rules of Gg Neo's modules respectfully; if users want full mastery beyond the core explanation, advise them to learn directly from Gg Neo / Qi.
+
+2. M36 CONCEPT (Liquidity Sweep & CHoCH Module):
+- The technique of waiting for a Liquidity Sweep FIRST and waiting for the CHoCH (Change of Character) level as confirmation before entering a position is a DIFFERENT SMC module called the "M36 Concept" (separate from Trinity M35 and Scalp Sniper).
+
+3. CHART PHOTO UPLOAD ANALYSIS (When the user sends a chart image):
+- Carefully inspect everything visible in the uploaded chart (market structure, trend/momentum, BOS, CHoCH, Liquidity Sweep, FVG markings, Order Blocks, Fibo Discount/Premium levels, timeframe if visible, and any drawings/lines/boxes made by the user).
+- Clearly report:
+  a) What is inside the chart (what SMC elements or setups are visible).
+  b) What is wrong or right in the chart / user's markings based on SMC and Gg Neo's rules (e.g., whether FVG is marked properly, whether Liquidity Sweep happened before CHoCH in M36, whether price is at Fibo Discount/Premium, or if entry looks forced/premature).
+  c) Clear recommendations on what the user needs to do next based on Gg Neo's SMC concepts (such as checking M3/M5/M15 alignment for Trinity M35, waiting for Scalp Sniper timing in the M5 FVG zone, or waiting for Liquidity Sweep + CHoCH confirmation under the M36 Concept).
+  d) Always remind the user to place a Stop Loss (SL), avoid full margin, and use moderate position sizing.
+- If the image is blurry or a timeframe/label is hard to read, honestly state what cannot be seen clearly instead of guessing.
+- Always remind users when relevant that Forex/CFD trading carries risk and this is educational guidance, not financial advice.
 
 MANDATORY COMMUNICATION RULES:
 1. ALWAYS START BY CALLING THE USER'S NAME: Every single response MUST begin by addressing the user by the exact name provided in [User Name], combined smoothly with your answer.
@@ -32,7 +54,7 @@ MANDATORY COMMUNICATION RULES:
    - For teasing/banter replies: start directly with "[User Name], ..."
 
 2. FORMAL TONE FOR TRADING & SERIOUS QUESTIONS (Primary Mode):
-   - Whenever the user asks seriously about trading, SMC, ICT, Elliott Wave, Momentum, or Gg Neo, ALWAYS respond in polite, respectful, and formal Bahasa Melayu (using proper standard Bahasa Melayu like "anda", "sila", "berikut", "sehubungan itu", etc.) or formal English if they ask seriously in English.
+   - Whenever the user asks seriously about trading, charts, SMC, ICT, Elliott Wave, Momentum, FVG, Trinity M35, Scalp Sniper, M36, or Gg Neo, ALWAYS respond in polite, respectful, and formal Bahasa Melayu (using proper standard Bahasa Melayu like "anda", "sila", "berikut", "sehubungan itu", etc.) or formal English if they ask seriously in English.
    - Use clean plain text formatting (no broken Markdown symbols).
 
 3. LANGUAGE RESTRICTION & BANTER FOR TROLLING / TEASING / OFF-TOPIC REQUESTS:
@@ -59,7 +81,17 @@ def webhook():
     update = request.get_json(silent=True) or {}
     message = update.get("message")
 
-    if not message or "text" not in message:
+    if not message:
+        return "OK", 200
+
+    has_text = "text" in message
+    has_photo = "photo" in message
+    document = message.get("document")
+    has_image_doc = bool(
+        document and str(document.get("mime_type", "")).startswith("image/")
+    )
+
+    if not has_text and not has_photo and not has_image_doc:
         return "OK", 200
 
     chat_id = message["chat"]["id"]
@@ -82,9 +114,39 @@ def webhook():
     else:
         user_name = "Tuan/Puan"
 
+    # Handle photo / image document upload
+    if has_photo or has_image_doc:
+        if has_photo:
+            image_file_id = message["photo"][-1]["file_id"]
+            image_mime_type = "image/jpeg"
+        else:
+            image_file_id = document["file_id"]
+            image_mime_type = document.get("mime_type", "image/jpeg")
+
+        caption = (message.get("caption") or "").strip()
+        if caption.startswith("/ask"):
+            parts = caption.split(maxsplit=1)
+            caption = parts[1].strip() if len(parts) > 1 else ""
+
+        if not caption:
+            user_text = (
+                "Tolong analisa gambar chart ini dengan teliti berdasarkan konsep SMC dan "
+                "teknik rahsia Gg Neo (Trinity M35, Scalp Sniper, M36 Concept, dan Fibo Discount). "
+                "Nyatakan apa yang terdapat di dalam chart, apa yang betul atau salah pada chart ini, "
+                "dan cadangkan tindakan yang perlu saya lakukan."
+            )
+        else:
+            user_text = caption
+
+        threading.Thread(
+            target=handle_ai_reply,
+            args=(chat_id, user_name, user_text, reply_to_id, image_file_id, image_mime_type),
+        ).start()
+        return "OK", 200
+
+    # Handle text messages & commands
     user_text = message["text"].strip()
 
-    # Handle commands cleanly (works in both private chats and groups)
     if user_text.startswith("/"):
         parts = user_text.split(maxsplit=1)
         cmd = parts[0].split("@")[0].lower()
@@ -94,8 +156,9 @@ def webhook():
                 f"Salam hormat {user_name},\n\n"
                 "Selamat datang ke AI Trading Assistant rasmi yang dibangunkan oleh Gg Neo (Qi / Gg).\n"
                 "Saya sedia membantu anda dalam Bahasa Melayu atau English berkaitan ICT / SMC, "
-                "Market Structure, Elliott Wave, Momentum, Liquidity Sweep, CHoCH, Fibo Discount, "
-                "serta konsep gaya Neo.\n\n"
+                "Market Structure, Elliott Wave, Momentum, FVG (Trinity M35 & Scalp Sniper), "
+                "M36 Concept (Liquidity Sweep & CHoCH), serta Fibo Discount.\n\n"
+                "Anda juga boleh memuat naik gambar chart untuk analisa SMC.\n"
                 "Sila ajukan soalan anda pada bila-bila masa."
             )
             threading.Thread(
@@ -107,9 +170,10 @@ def webhook():
         if cmd == "/help":
             help_msg = (
                 f"Salam hormat {user_name},\n\n"
-                "Anda boleh bertanya sebarang soalan dalam Bahasa Melayu atau English.\n"
+                "Anda boleh bertanya sebarang soalan dalam Bahasa Melayu atau English, "
+                "atau memuat naik gambar chart untuk semakan SMC.\n"
                 "Di dalam kumpulan (Group), anda boleh:\n"
-                "- Gunakan arahan /ask diikuti soalan anda\n"
+                "- Gunakan arahan /ask diikuti soalan anda (atau letak /ask pada caption gambar chart)\n"
                 "- Tag nama bot ini (@username_bot) bersama soalan anda\n"
                 "- Atau balas (Reply) terus pada mesej bot ini."
             )
@@ -126,7 +190,7 @@ def webhook():
                 prompt_msg = (
                     f"Salam hormat {user_name},\n\n"
                     "Sila tulis soalan anda selepas arahan /ask. "
-                    "Contoh: /ask Bagaimana cara menggunakan Liquidity Sweep dan CHoCH?"
+                    "Contoh: /ask Bagaimana tutorial FVG Trinity M35?"
                 )
                 threading.Thread(
                     target=send_telegram_message,
@@ -134,10 +198,8 @@ def webhook():
                 ).start()
                 return "OK", 200
         else:
-            # Ignore unrecognized commands so we don't clash with other group bots
             return "OK", 200
 
-    # Run AI call in background so Telegram gets 200 OK immediately
     threading.Thread(
         target=handle_ai_reply,
         args=(chat_id, user_name, user_text, reply_to_id),
@@ -145,7 +207,52 @@ def webhook():
     return "OK", 200
 
 
-def handle_ai_reply(chat_id, user_name, user_text, reply_to_id=None):
+def download_telegram_image(file_id, fallback_mime="image/jpeg"):
+    try:
+        info_res = requests.get(
+            f"https://api.telegram.org/bot{BOT_TOKEN}/getFile",
+            params={"file_id": file_id},
+            timeout=15,
+        )
+        info_data = info_res.json()
+        if not info_res.ok or not info_data.get("ok"):
+            print(f"Telegram getFile error: {info_data}", flush=True)
+            return None, None
+
+        file_path = info_data["result"]["file_path"]
+        lower_path = file_path.lower()
+        if lower_path.endswith(".png"):
+            mime_type = "image/png"
+        elif lower_path.endswith(".webp"):
+            mime_type = "image/webp"
+        elif lower_path.endswith(".jpg") or lower_path.endswith(".jpeg"):
+            mime_type = "image/jpeg"
+        else:
+            mime_type = fallback_mime
+
+        file_res = requests.get(
+            f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}",
+            timeout=30,
+        )
+        if not file_res.ok:
+            print(f"Telegram file download error: {file_res.status_code}", flush=True)
+            return None, None
+
+        b64_data = base64.b64encode(file_res.content).decode("utf-8")
+        return b64_data, mime_type
+    except Exception as e:
+        print(f"Error downloading Telegram image: {e}", flush=True)
+        return None, None
+
+
+def handle_ai_reply(
+    chat_id,
+    user_name,
+    user_text,
+    reply_to_id=None,
+    image_file_id=None,
+    image_mime_type="image/jpeg",
+):
     if not GEMINI_API_KEY:
         print("Error: GEMINI_API_KEY is missing.", flush=True)
         send_telegram_message(
@@ -162,6 +269,34 @@ def handle_ai_reply(chat_id, user_name, user_text, reply_to_id=None):
             timeout=10,
         )
 
+        user_parts = [
+            {
+                "text": f"[User Name: {user_name}]\nUser Message: {user_text}"
+            }
+        ]
+
+        if image_file_id:
+            b64_data, detected_mime = download_telegram_image(
+                image_file_id, image_mime_type
+            )
+            if not b64_data:
+                send_telegram_message(
+                    chat_id,
+                    f"Salam hormat {user_name}, maaf, saya gagal memuat turun gambar chart tersebut. "
+                    "Sila cuba muat naik semula gambar tersebut.",
+                    reply_to_id,
+                )
+                return
+
+            user_parts.append(
+                {
+                    "inlineData": {
+                        "mimeType": detected_mime,
+                        "data": b64_data,
+                    }
+                }
+            )
+
         gemini_url = (
             "https://generativelanguage.googleapis.com/v1beta/models/"
             f"gemini-3.5-flash-lite:generateContent?key={GEMINI_API_KEY}"
@@ -174,16 +309,12 @@ def handle_ai_reply(chat_id, user_name, user_text, reply_to_id=None):
             "contents": [
                 {
                     "role": "user",
-                    "parts": [
-                        {
-                            "text": f"[User Name: {user_name}]\nUser Message: {user_text}"
-                        }
-                    ],
+                    "parts": user_parts,
                 }
             ],
         }
 
-        res = requests.post(gemini_url, json=payload, timeout=30)
+        res = requests.post(gemini_url, json=payload, timeout=45)
         data = res.json()
 
         reply_text = (
