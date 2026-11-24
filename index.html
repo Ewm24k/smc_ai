@@ -11,7 +11,7 @@
   <style>
     :root {
       --bg-void: #05060a;
-      --bg-card: rgba(14, 18, 28, 0.75);
+      --bg-card: rgba(14, 18, 28, 0.78);
       --border-glass: rgba(255, 255, 255, 0.09);
       --emerald: #089981;
       --crimson: #f23645;
@@ -87,7 +87,7 @@
     }
 
     .logo-sub {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--emerald);
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -103,28 +103,31 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: max(20px, env(safe-area-inset-top)) clamp(16px, 5vw, 56px) max(20px, env(safe-area-inset-bottom));
+      padding: max(18px, env(safe-area-inset-top)) clamp(16px, 5vw, 56px) max(18px, env(safe-area-inset-bottom));
     }
 
     .home-nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
+
+    .nav-right { display: flex; align-items: center; gap: 8px; }
 
     .status-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       padding: 7px 12px;
       border-radius: 999px;
       background: var(--bg-card);
       border: 1px solid var(--border-glass);
       backdrop-filter: blur(14px);
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
+      cursor: pointer;
     }
 
     .pulse-dot {
@@ -143,7 +146,7 @@
 
     .hero {
       max-width: 1080px;
-      margin: 28px auto;
+      margin: 26px auto;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -165,7 +168,7 @@
 
     .hero h1 {
       font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(1.9rem, 5.2vw, 3.9rem);
+      font-size: clamp(1.85rem, 5vw, 3.8rem);
       line-height: 1.08;
       letter-spacing: -0.02em;
       max-width: 860px;
@@ -179,9 +182,9 @@
 
     .hero p {
       color: var(--text-muted);
-      font-size: clamp(0.9rem, 1.8vw, 1.08rem);
+      font-size: clamp(0.88rem, 1.8vw, 1.08rem);
       max-width: 680px;
-      line-height: 1.6;
+      line-height: 1.58;
     }
 
     .btn-primary {
@@ -196,9 +199,10 @@
       color: #04100d;
       background: linear-gradient(135deg, #f5b942, #18d4a7);
       box-shadow: 0 10px 35px rgba(8, 153, 129, 0.36), 0 0 25px rgba(245, 185, 66, 0.25);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
     }
 
@@ -206,16 +210,16 @@
 
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 14px;
       width: 100%;
       max-width: 1040px;
-      margin-top: 18px;
+      margin-top: 14px;
     }
 
     .glass-card {
       text-align: left;
-      padding: 18px;
+      padding: 16px;
       border-radius: 16px;
       background: var(--bg-card);
       border: 1px solid var(--border-glass);
@@ -223,22 +227,22 @@
     }
 
     .card-kicker {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--gold);
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
-    .card-title { font-family: "Space Grotesk", sans-serif; font-size: 1rem; margin-bottom: 5px; }
-    .card-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.48; }
+    .card-title { font-family: "Space Grotesk", sans-serif; font-size: 0.98rem; margin-bottom: 5px; }
+    .card-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.45; }
 
     .home-footer {
       text-align: center;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--text-muted);
-      padding-top: 14px;
+      padding-top: 12px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -259,31 +263,29 @@
 
     #platform-view.active { display: flex; }
 
-    .platform-header {
-      padding: 8px 10px;
+    .desktop-header {
+      height: 52px;
+      padding: 0 12px;
       background: rgba(11, 14, 22, 0.98);
       border-bottom: 1px solid var(--border-glass);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
       flex-shrink: 0;
-      flex-wrap: wrap;
     }
+
+    .mobile-header, .mobile-bottom-dock { display: none; }
 
     .header-group {
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
-      max-width: 100%;
+      gap: 7px;
+      flex-shrink: 0;
     }
-    .header-group::-webkit-scrollbar { display: none; }
 
     .select-dark {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       color: var(--gold);
       border: 1px solid rgba(245, 185, 66, 0.35);
       border-radius: 8px;
@@ -292,7 +294,6 @@
       font-size: 0.78rem;
       outline: none;
       cursor: pointer;
-      flex-shrink: 0;
     }
 
     .select-dark option { background: #0e131f; color: #f3f5f9; }
@@ -304,21 +305,20 @@
       padding: 3px;
       border-radius: 8px;
       border: 1px solid var(--border-glass);
-      flex-shrink: 0;
     }
 
     .tf-btn {
       border: none;
       background: transparent;
       color: var(--text-muted);
-      padding: 5px 7px;
+      padding: 5px 8px;
       border-radius: 6px;
       font-size: 0.74rem;
       font-weight: 600;
       cursor: pointer;
     }
 
-    .tf-btn.active, .tf-btn:hover { background: rgba(8, 153, 129, 0.25); color: #ffffff; }
+    .tf-btn.active, .tf-btn:hover { background: rgba(8, 153, 129, 0.28); color: #ffffff; }
 
     .mini-btn {
       appearance: none;
@@ -326,12 +326,13 @@
       padding: 6px 9px;
       border-radius: 8px;
       border: 1px solid var(--border-glass);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text-muted);
       font-size: 0.74rem;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 4px;
       white-space: nowrap;
       flex-shrink: 0;
@@ -345,12 +346,11 @@
       align-items: center;
       gap: 6px;
       font-family: "Space Grotesk", sans-serif;
-      font-size: 0.8rem;
-      padding: 4px 8px;
+      font-size: 0.82rem;
+      padding: 4px 9px;
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-glass);
-      flex-shrink: 0;
     }
 
     .workspace {
@@ -362,24 +362,21 @@
     }
 
     .draw-sidebar {
-      width: 44px;
+      width: 46px;
       background: rgba(11, 14, 22, 0.98);
       border-right: 1px solid var(--border-glass);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 8px 0;
-      gap: 6px;
+      padding: 10px 0;
+      gap: 8px;
       flex-shrink: 0;
       z-index: 15;
-      overflow-y: auto;
-      scrollbar-width: none;
     }
-    .draw-sidebar::-webkit-scrollbar { display: none; }
 
     .tool-btn {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       border: 1px solid transparent;
       background: transparent;
@@ -387,13 +384,13 @@
       cursor: pointer;
       display: grid;
       place-items: center;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       flex-shrink: 0;
       transition: all 0.15s ease;
     }
 
-    .tool-btn:hover { background: rgba(255, 255, 255, 0.07); color: #ffffff; }
-    .tool-btn.active { background: rgba(245, 185, 66, 0.16); border-color: rgba(245, 185, 66, 0.55); color: var(--gold); }
+    .tool-btn:hover { background: rgba(255, 255, 255, 0.08); color: #ffffff; }
+    .tool-btn.active { background: rgba(245, 185, 66, 0.18); border-color: rgba(245, 185, 66, 0.6); color: var(--gold); }
 
     .chart-stage {
       flex: 1;
@@ -440,12 +437,87 @@
       font-size: 0.74rem;
       font-weight: 600;
       max-width: calc(100% - 85px);
+      color: #f3f5f9;
     }
 
-    #trend-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    #trend-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ================= LIGHT THEME (Black & White Candles on White Background) ================= */
+    body.light-chart #platform-view {
+      background: #ffffff;
+    }
+    body.light-chart .desktop-header,
+    body.light-chart .mobile-header,
+    body.light-chart .draw-sidebar,
+    body.light-chart .mobile-bottom-dock {
+      background: #f8fafc;
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+    body.light-chart .logo-title {
+      background: linear-gradient(90deg, #0f172a, #b45309);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body.light-chart .select-dark {
+      background: #ffffff;
+      color: #0f172a;
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+    body.light-chart .select-dark option {
+      background: #ffffff;
+      color: #0f172a;
+    }
+    body.light-chart .live-price-box {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.14);
+    }
+    body.light-chart .live-price {
+      color: #000000 !important;
+    }
+    body.light-chart .tf-bar {
+      background: #eef2f6;
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    body.light-chart .tf-btn {
+      color: #475569;
+    }
+    body.light-chart .tf-btn.active,
+    body.light-chart .tf-btn:hover {
+      background: #0f172a;
+      color: #ffffff;
+    }
+    body.light-chart .mini-btn {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.15);
+      color: #334155;
+    }
+    body.light-chart .mini-btn.on {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+    }
+    body.light-chart .tool-btn {
+      color: #334155;
+    }
+    body.light-chart .tool-btn:hover {
+      background: rgba(0, 0, 0, 0.06);
+      color: #000000;
+    }
+    body.light-chart .tool-btn.active {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+    }
+    body.light-chart .chart-stage {
+      background: #ffffff;
+    }
+    body.light-chart .chart-watermark {
+      color: rgba(0, 0, 0, 0.34);
+    }
+    body.light-chart .trend-badge {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(0, 0, 0, 0.15);
+      color: #0f172a;
     }
 
     /* ================= SKELETON LOADER ================= */
@@ -460,7 +532,6 @@
     }
 
     #chart-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
     .sk-body { flex: 1; display: flex; min-height: 0; }
 
     .sk-canvas {
@@ -518,7 +589,6 @@
 
     #hud-drawer {
       width: 280px;
-      max-width: 82vw;
       background: rgba(11, 14, 22, 0.98);
       border-left: 1px solid var(--border-glass);
       padding: 14px;
@@ -527,10 +597,12 @@
       flex-direction: column;
       gap: 12px;
       flex-shrink: 0;
-      z-index: 20;
+      z-index: 30;
     }
 
     #hud-drawer.open { display: flex; }
+
+    .hud-head-mobile { display: none; }
 
     .hud-section {
       padding: 12px;
@@ -559,45 +631,129 @@
 
     .hud-check input { accent-color: var(--emerald); margin-top: 2px; }
 
-    /* ================= MOBILE OPTIMIZATIONS (iPhone & Android) ================= */
-    @media (max-width: 820px) {
-      .hide-mobile { display: none; }
-      .platform-header {
-        padding: 6px 8px;
-        gap: 6px;
-      }
-      .header-group {
-        width: 100%;
-        justify-content: flex-start;
-      }
-      .draw-sidebar {
-        width: 38px;
-        padding: 6px 0;
-        gap: 5px;
-      }
-      .tool-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 0.82rem;
-      }
-      .trend-badge {
-        top: 8px;
-        left: 8px;
-        font-size: 0.67rem;
-        padding: 4px 8px;
-        max-width: calc(100% - 72px);
-      }
-      .chart-watermark {
-        right: 60px;
-        bottom: 26px;
-        font-size: 0.7rem;
-      }
-      #hud-drawer {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
+    /* =========================================================================
+       NATIVE PHONE APP POV STYLE (Auto-activated on Android & iPhone Browsers)
+       ========================================================================= */
+    body.mobile-mode #home-view {
+      padding: max(14px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom));
+      gap: 12px;
+    }
+
+    body.mobile-mode .status-pill.hide-on-phone { display: none; }
+    body.mobile-mode .hero { margin: 12px auto; gap: 14px; }
+    body.mobile-mode .hero h1 { font-size: 1.75rem; }
+    body.mobile-mode .hero p { font-size: 0.86rem; line-height: 1.5; }
+    body.mobile-mode .btn-primary { width: 100%; padding: 15px 20px; font-size: 1rem; border-radius: 16px; }
+    body.mobile-mode .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 6px; }
+    body.mobile-mode .glass-card { padding: 12px; border-radius: 14px; }
+    body.mobile-mode .card-title { font-size: 0.88rem; }
+    body.mobile-mode .card-desc { font-size: 0.74rem; line-height: 1.38; }
+
+    body.mobile-mode .desktop-header,
+    body.mobile-mode .draw-sidebar {
+      display: none !important;
+    }
+
+    body.mobile-mode .mobile-header {
+      display: flex;
+      height: 48px;
+      padding: 0 8px;
+      background: rgba(10, 13, 20, 0.98);
+      border-bottom: 1px solid var(--border-glass);
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    body.mobile-mode .mobile-header-left,
+    body.mobile-mode .mobile-header-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    body.mobile-mode .mobile-bottom-dock {
+      display: flex;
+      flex-direction: column;
+      background: rgba(10, 13, 20, 0.99);
+      border-top: 1px solid var(--border-glass);
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    body.mobile-mode .dock-row-1 {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    body.mobile-mode .dock-row-1::-webkit-scrollbar { display: none; }
+
+    body.mobile-mode .dock-row-2 {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      padding: 6px 8px;
+    }
+
+    body.mobile-mode .dock-row-2 .tool-btn {
+      width: 100%;
+      height: 36px;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    body.mobile-mode.light-chart .dock-row-2 .tool-btn {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+    body.mobile-mode.light-chart .dock-row-2 .tool-btn.active {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+    }
+
+    body.mobile-mode .dock-row-2 .tool-btn.active {
+      background: rgba(245, 185, 66, 0.18);
+      border-color: rgba(245, 185, 66, 0.65);
+      color: var(--gold);
+    }
+
+    body.mobile-mode .trend-badge {
+      top: 8px;
+      left: 8px;
+      font-size: 0.65rem;
+      padding: 4px 8px;
+      max-width: calc(100% - 70px);
+    }
+
+    body.mobile-mode .chart-watermark { font-size: 0.68rem; }
+
+    body.mobile-mode #hud-drawer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: auto;
+      width: 100%;
+      max-height: 70%;
+      border-left: none;
+      border-top: 1px solid rgba(245, 185, 66, 0.4);
+      border-radius: 18px 18px 0 0;
+      box-shadow: 0 -14px 40px rgba(0, 0, 0, 0.75);
+    }
+
+    body.mobile-mode .hud-head-mobile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
   </style>
 </head>
@@ -624,19 +780,24 @@
         </div>
       </a>
 
-      <div class="status-pill">
-        <span class="pulse-dot"></span>
-        <span>GG SMC Private Engine • Zero Source Exposure</span>
+      <div class="nav-right">
+        <button class="status-pill" onclick="togglePOVManual()" title="Switch Phone / Desktop POV">
+          <span class="pulse-dot"></span>
+          <span id="pov-label">Auto POV</span>
+        </button>
+        <div class="status-pill hide-on-phone">
+          <span>Zero Source Exposure</span>
+        </div>
       </div>
     </header>
 
     <section class="hero">
-      <div class="hero-tag">Closed-Source Terminal • XAUUSD Default • Trinity M35 &amp; M36</div>
+      <div class="hero-tag">XAUUSD Terminal • Trinity M35 &amp; M36</div>
       <h1>Next-Gen <span>GG SMC XAUUSD</span> Institutional Chart</h1>
       <p>
         Powered by <strong>GG SMC @ Catella Family</strong>. Live <strong>XAUUSD (M5)</strong> candlesticks
         with real-time <strong>BOS, CHoCH, Sweep (x), Volumetric Order Blocks, and Fair Value Gaps</strong>
-        computed securely on our private server—optimized for Desktop, Android &amp; iPhone.
+        computed privately on our server.
       </p>
 
       <button class="btn-primary" onclick="enterPlatform()">
@@ -647,35 +808,36 @@
       <div class="cards-grid">
         <div class="glass-card">
           <div class="card-kicker">Market Structure</div>
-          <div class="card-title">BOS, CHoCH &amp; Sweep (x)</div>
-          <div class="card-desc">Automatic swing detection, liquidity sweep markers, and structural bubbles synced in real time.</div>
+          <div class="card-title">BOS, CHoCH &amp; (x)</div>
+          <div class="card-desc">Auto swing structure, sweeps, and origin bubbles synced in real time.</div>
         </div>
         <div class="glass-card">
           <div class="card-kicker">Order Blocks</div>
-          <div class="card-title">Volumetric OB + % Metrics</div>
-          <div class="card-desc">Live mitigated-filtered Order Blocks with buy/sell activity bars, mid-line, and volume % metrics.</div>
+          <div class="card-title">Volumetric OB %</div>
+          <div class="card-desc">Buy/sell activity bars, dashed mid-line, and volume % metrics.</div>
         </div>
         <div class="glass-card">
-          <div class="card-kicker">Mobile Ready</div>
-          <div class="card-title">Android &amp; iPhone Touch</div>
-          <div class="card-desc">Pinch-to-zoom, vertical price scaling, and touch drawing tools synced smoothly on every frame.</div>
+          <div class="card-kicker">Pro Chart Controls</div>
+          <div class="card-title">B&amp;W Light + Grid</div>
+          <div class="card-desc">Switch Dark or White/Black candles with black crosshair, plus toggle Grid ON/OFF.</div>
         </div>
         <div class="glass-card">
-          <div class="card-kicker">Source Protection</div>
-          <div class="card-title">100% Hidden Logic</div>
-          <div class="card-desc">All GG SMC algorithms execute privately on Render—visitors only receive rendered coordinates.</div>
+          <div class="card-kicker">IP Protection</div>
+          <div class="card-title">100% Hidden Code</div>
+          <div class="card-desc">All GG SMC logic runs privately on Render—never exposed in browser.</div>
         </div>
       </div>
     </section>
 
     <footer class="home-footer">
-      GG SMC @ Catella Family • GG SMC Concept aka catella • Always Use Stop Loss &amp; Moderate Position Sizing
+      GG SMC @ Catella Family • GG SMC Concept aka catella • Always Use Stop Loss
     </footer>
   </main>
 
   <!-- ================= PLATFORM CHART VIEW ================= -->
   <section id="platform-view" aria-hidden="true">
-    <header class="platform-header">
+    <!-- DESKTOP PRO HEADER -->
+    <header class="desktop-header">
       <div class="header-group">
         <div class="brand-logo" style="cursor:pointer;" onclick="exitPlatform()">
           <div class="logo-emblem" style="width:28px;height:28px;border-radius:8px;">
@@ -685,14 +847,14 @@
               <rect x="16" y="7" width="4" height="7" rx="1" fill="#089981"/>
             </svg>
           </div>
-          <div class="logo-text-wrap hide-mobile">
+          <div class="logo-text-wrap">
             <span class="logo-title" style="font-size:0.84rem;">GG SMC</span>
             <span class="logo-sub" style="font-size:0.58rem;">@ Catella Family</span>
           </div>
         </div>
 
-        <select id="symbol-select" class="select-dark" onchange="changeSymbol(this.value)">
-          <option value="XAUUSD" selected>XAUUSD</option>
+        <select class="select-dark symbol-select" onchange="changeSymbol(this.value)">
+          <option value="XAUUSD" selected>XAUUSD (Gold)</option>
           <option value="PAXGUSDT">PAXGUSDT (24/7)</option>
           <option value="EURUSD">EURUSD</option>
           <option value="GBPUSD">GBPUSD</option>
@@ -700,16 +862,7 @@
           <option value="BTCUSDT">BTCUSDT</option>
         </select>
 
-        <div class="live-price-box">
-          <span id="live-price" style="font-weight:700;color:#ffffff;">--</span>
-          <span id="live-chg" style="font-size:0.72rem;color:var(--text-muted);">--</span>
-        </div>
-
-        <button class="mini-btn" style="margin-left:auto;" onclick="exitPlatform()">← Home</button>
-      </div>
-
-      <div class="header-group">
-        <div class="tf-bar" id="tf-bar">
+        <div class="tf-bar">
           <button class="tf-btn" data-tf="1m">1m</button>
           <button class="tf-btn" data-tf="3m">3m</button>
           <button class="tf-btn active" data-tf="5m">5m</button>
@@ -719,23 +872,68 @@
           <button class="tf-btn" data-tf="1d">1D</button>
         </div>
 
-        <button id="btn-ms" class="mini-btn on" onclick="toggleLayer('ms')">MS</button>
-        <button id="btn-ob" class="mini-btn on" onclick="toggleLayer('ob')">OB</button>
-        <button id="btn-fvg" class="mini-btn" onclick="toggleLayer('fvg')">FVG</button>
-        <button class="mini-btn" onclick="toggleHud()">M35/36</button>
+        <div class="live-price-box">
+          <span class="live-price" style="font-weight:700;color:#ffffff;">--</span>
+          <span class="live-chg" style="font-size:0.74rem;color:var(--text-muted);">--</span>
+        </div>
+      </div>
+
+      <div class="header-group">
+        <button class="mini-btn layer-btn on" data-layer="ms" onclick="toggleLayer('ms')">Structure</button>
+        <button class="mini-btn layer-btn on" data-layer="ob" onclick="toggleLayer('ob')">Order Blocks</button>
+        <button class="mini-btn layer-btn" data-layer="fvg" onclick="toggleLayer('fvg')">FVG</button>
+        <button class="mini-btn grid-btn on" onclick="toggleGrid()" title="Toggle Grid ON / OFF">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M1 5.5h14M1 10.5h14M5.5 1v14M10.5 1v14"/>
+          </svg>
+        </button>
+        <button class="mini-btn theme-btn" onclick="toggleTheme()" title="Switch Dark / Light (B&W Candles)">☀️</button>
+        <button class="mini-btn" onclick="toggleHud()">Checklist</button>
+        <button class="mini-btn" onclick="togglePOVManual()" title="Switch Phone/Desktop POV">📱</button>
         <button class="mini-btn" onclick="fetchChartData(true)" title="Refresh">↻</button>
+        <button class="mini-btn" onclick="exitPlatform()">← Home</button>
+      </div>
+    </header>
+
+    <!-- MOBILE PHONE APP HEADER -->
+    <header class="mobile-header">
+      <div class="mobile-header-left">
+        <button class="mini-btn" style="padding:6px 7px;" onclick="exitPlatform()">←</button>
+        <select class="select-dark symbol-select" style="padding:5px 5px;font-size:0.74rem;" onchange="changeSymbol(this.value)">
+          <option value="XAUUSD" selected>XAUUSD</option>
+          <option value="PAXGUSDT">PAXG 24/7</option>
+          <option value="EURUSD">EURUSD</option>
+          <option value="GBPUSD">GBPUSD</option>
+          <option value="USDJPY">USDJPY</option>
+          <option value="BTCUSDT">BTCUSDT</option>
+        </select>
+        <div class="live-price-box" style="padding:4px 6px;font-size:0.72rem;">
+          <span class="live-price" style="font-weight:700;color:#fff;">--</span>
+          <span class="live-chg" style="font-size:0.66rem;">--</span>
+        </div>
+      </div>
+      <div class="mobile-header-right">
+        <button class="mini-btn theme-btn" style="padding:5px 7px;" onclick="toggleTheme()" title="Theme">☀️</button>
+        <button class="mini-btn grid-btn on" style="padding:5px 7px;" onclick="toggleGrid()" title="Grid">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M1 5.5h14M1 10.5h14M5.5 1v14M10.5 1v14"/>
+          </svg>
+        </button>
+        <button class="mini-btn" style="padding:5px 7px;" onclick="toggleHud()">M35</button>
+        <button class="mini-btn" style="padding:5px 7px;" onclick="fetchChartData(true)">↻</button>
       </div>
     </header>
 
     <div class="workspace">
+      <!-- DESKTOP LEFT DRAWING BAR -->
       <aside class="draw-sidebar" title="Drawing Tools">
         <button class="tool-btn active" data-tool="cursor" title="Cursor / Pan & Zoom">⌖</button>
         <button class="tool-btn" data-tool="hline" title="Horizontal Ray / Line">―</button>
         <button class="tool-btn" data-tool="box" title="FVG / Zone Box">▭</button>
         <button class="tool-btn" data-tool="trend" title="Trend Line">╱</button>
-        <button class="tool-btn" data-tool="fibo" title="Fibonacci Retracement (Discount 0.618-0.786)">≡</button>
-        <button class="tool-btn" onclick="undoDrawing()" title="Undo Last Drawing">↶</button>
-        <button class="tool-btn" onclick="clearDrawings()" title="Clear All Drawings" style="color:#f23645;">✕</button>
+        <button class="tool-btn" data-tool="fibo" title="Fibonacci Retracement">≡</button>
+        <button class="tool-btn" onclick="undoDrawing()" title="Undo">↶</button>
+        <button class="tool-btn" onclick="clearDrawings()" title="Clear All" style="color:#f23645;">✕</button>
       </aside>
 
       <div class="chart-stage" id="chart-stage">
@@ -777,7 +975,12 @@
         <div class="chart-watermark" id="chart-watermark">GG SMC Concept aka catella</div>
       </div>
 
+      <!-- CHECKLIST HUD -->
       <aside id="hud-drawer">
+        <div class="hud-head-mobile">
+          <strong style="font-family:'Space Grotesk',sans-serif;color:var(--gold);font-size:0.9rem;">GG SMC Checklist</strong>
+          <button class="mini-btn" onclick="toggleHud()">Close ✕</button>
+        </div>
         <div class="hud-section">
           <h4>Trinity M35 (FVG Filter)</h4>
           <label class="hud-check"><input type="checkbox"/> Mark M5 FVG (Box / Ray)</label>
@@ -799,6 +1002,34 @@
         </div>
       </aside>
     </div>
+
+    <!-- MOBILE PHONE BOTTOM THUMB DOCK -->
+    <footer class="mobile-bottom-dock">
+      <div class="dock-row-1">
+        <div class="tf-bar">
+          <button class="tf-btn" data-tf="1m">1m</button>
+          <button class="tf-btn" data-tf="3m">3m</button>
+          <button class="tf-btn active" data-tf="5m">5m</button>
+          <button class="tf-btn" data-tf="15m">15m</button>
+          <button class="tf-btn" data-tf="1h">1h</button>
+          <button class="tf-btn" data-tf="4h">4h</button>
+          <button class="tf-btn" data-tf="1d">1D</button>
+        </div>
+        <button class="mini-btn layer-btn on" data-layer="ms" onclick="toggleLayer('ms')">MS</button>
+        <button class="mini-btn layer-btn on" data-layer="ob" onclick="toggleLayer('ob')">OB</button>
+        <button class="mini-btn layer-btn" data-layer="fvg" onclick="toggleLayer('fvg')">FVG</button>
+        <button class="mini-btn" onclick="togglePOVManual()">🖥️</button>
+      </div>
+      <div class="dock-row-2">
+        <button class="tool-btn active" data-tool="cursor" title="Pan & Zoom">⌖</button>
+        <button class="tool-btn" data-tool="hline" title="H-Line">―</button>
+        <button class="tool-btn" data-tool="box" title="Box">▭</button>
+        <button class="tool-btn" data-tool="trend" title="Trend">╱</button>
+        <button class="tool-btn" data-tool="fibo" title="Fibo">≡</button>
+        <button class="tool-btn" onclick="undoDrawing()" title="Undo">↶</button>
+        <button class="tool-btn" onclick="clearDrawings()" title="Clear" style="color:#f23645;">✕</button>
+      </div>
+    </footer>
   </section>
 
   <script>
@@ -811,17 +1042,131 @@
     let smcData = null;
     let pollTimer = null;
     let lastSyncSig = "";
+    let manualPOV = null;
+
+    let isLightTheme = false;
+    let isGridOn = true;
 
     const layers = { ms: true, ob: true, fvg: false };
     let activeTool = "cursor";
     let userDrawings = [];
     let draftDraw = null;
 
+    function isPhoneBrowser() {
+      const ua = navigator.userAgent || "";
+      const uaMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+      const coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      const smallScreen = Math.min(window.innerWidth, window.screen.width || window.innerWidth) <= 880;
+      return uaMobile || (coarse && smallScreen) || window.innerWidth <= 820;
+    }
+
+    function applyDevicePOV() {
+      const useMobile = manualPOV !== null ? manualPOV : isPhoneBrowser();
+      document.body.classList.toggle("mobile-mode", useMobile);
+      const povLabel = document.getElementById("pov-label");
+      if (povLabel) povLabel.textContent = useMobile ? "Phone POV" : "Desktop POV";
+
+      if (chart) {
+        chart.applyOptions({
+          layout: { fontSize: useMobile ? 10 : 12 },
+          timeScale: {
+            rightOffset: useMobile ? 6 : 14,
+            barSpacing: useMobile ? 6 : 8,
+          },
+        });
+        setTimeout(resizeCanvases, 80);
+      }
+    }
+
+    function togglePOVManual() {
+      const currentlyMobile = document.body.classList.contains("mobile-mode");
+      manualPOV = !currentlyMobile;
+      applyDevicePOV();
+    }
+
+    applyDevicePOV();
+    window.addEventListener("resize", () => {
+      if (manualPOV === null) applyDevicePOV();
+    });
+
+    function toggleTheme() {
+      isLightTheme = !isLightTheme;
+      document.body.classList.toggle("light-chart", isLightTheme);
+      document.querySelectorAll(".theme-btn").forEach(btn => {
+        btn.textContent = isLightTheme ? "🌙" : "☀️";
+        btn.classList.toggle("on", isLightTheme);
+      });
+      applyChartThemeAndGrid();
+      renderSmcOverlay();
+      renderDrawOverlay();
+    }
+
+    function toggleGrid() {
+      isGridOn = !isGridOn;
+      document.querySelectorAll(".grid-btn").forEach(btn => {
+        btn.classList.toggle("on", isGridOn);
+      });
+      applyChartThemeAndGrid();
+    }
+
+    function applyChartThemeAndGrid() {
+      if (!chart || !candleSeries) return;
+
+      const gridColor = isLightTheme ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.04)";
+      const borderCol = isLightTheme ? "rgba(0, 0, 0, 0.18)" : "rgba(255, 255, 255, 0.08)";
+
+      chart.applyOptions({
+        layout: {
+          background: { type: "solid", color: isLightTheme ? "#ffffff" : "#0a0c12" },
+          textColor: isLightTheme ? "#111827" : "#9ba4b5",
+        },
+        grid: {
+          vertLines: { visible: isGridOn, color: gridColor },
+          horzLines: { visible: isGridOn, color: gridColor },
+        },
+        crosshair: {
+          mode: LightweightCharts.CrosshairMode.Normal,
+          vertLine: {
+            color: isLightTheme ? "#000000" : "#758696",
+            labelBackgroundColor: isLightTheme ? "#000000" : "#1e293b",
+          },
+          horzLine: {
+            color: isLightTheme ? "#000000" : "#758696",
+            labelBackgroundColor: isLightTheme ? "#000000" : "#1e293b",
+          },
+        },
+        rightPriceScale: { borderColor: borderCol },
+        timeScale: { borderColor: borderCol },
+      });
+
+      // Light mode = Classic White & Black Candles; Dark mode = Emerald & Crimson Candles
+      if (isLightTheme) {
+        candleSeries.applyOptions({
+          upColor: "#ffffff",
+          downColor: "#000000",
+          borderUpColor: "#000000",
+          borderDownColor: "#000000",
+          wickUpColor: "#000000",
+          wickDownColor: "#000000",
+        });
+      } else {
+        candleSeries.applyOptions({
+          upColor: "#089981",
+          downColor: "#f23645",
+          borderUpColor: "#089981",
+          borderDownColor: "#f23645",
+          wickUpColor: "#089981",
+          wickDownColor: "#f23645",
+        });
+      }
+    }
+
     function enterPlatform() {
       document.getElementById("home-view").style.display = "none";
       const p = document.getElementById("platform-view");
       p.classList.add("active");
       p.setAttribute("aria-hidden", "false");
+      applyDevicePOV();
 
       if (!chart) {
         initChart();
@@ -846,31 +1191,36 @@
 
     function toggleLayer(name) {
       layers[name] = !layers[name];
-      document.getElementById("btn-" + name).classList.toggle("on", layers[name]);
+      document.querySelectorAll(`.layer-btn[data-layer="${name}"]`).forEach(btn => {
+        btn.classList.toggle("on", layers[name]);
+      });
       renderSmcOverlay();
     }
 
     function changeSymbol(sym) {
       currentSymbol = sym;
+      document.querySelectorAll(".symbol-select").forEach(sel => { sel.value = sym; });
       userDrawings = [];
       fetchChartData(true);
     }
 
-    document.getElementById("tf-bar").addEventListener("click", (e) => {
-      const btn = e.target.closest(".tf-btn");
-      if (!btn) return;
-      document.querySelectorAll(".tf-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentTf = btn.dataset.tf;
-      userDrawings = [];
-      fetchChartData(true);
+    document.querySelectorAll(".tf-btn[data-tf]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentTf = btn.dataset.tf;
+        document.querySelectorAll(".tf-btn[data-tf]").forEach(b => {
+          b.classList.toggle("active", b.dataset.tf === currentTf);
+        });
+        userDrawings = [];
+        fetchChartData(true);
+      });
     });
 
     document.querySelectorAll(".tool-btn[data-tool]").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".tool-btn[data-tool]").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
         activeTool = btn.dataset.tool;
+        document.querySelectorAll(".tool-btn[data-tool]").forEach(b => {
+          b.classList.toggle("active", b.dataset.tool === activeTool);
+        });
         const drawCanvas = document.getElementById("draw-canvas");
         drawCanvas.style.pointerEvents = activeTool === "cursor" ? "none" : "auto";
         drawCanvas.style.cursor = activeTool === "cursor" ? "default" : "crosshair";
@@ -882,7 +1232,7 @@
 
     function initChart() {
       const container = document.getElementById("lwc-container");
-      const isMobile = window.innerWidth <= 820;
+      const isMobile = document.body.classList.contains("mobile-mode");
 
       chart = LightweightCharts.createChart(container, {
         layout: {
@@ -891,8 +1241,8 @@
           fontSize: isMobile ? 10 : 12,
         },
         grid: {
-          vertLines: { color: "rgba(255,255,255,0.035)" },
-          horzLines: { color: "rgba(255,255,255,0.035)" },
+          vertLines: { visible: isGridOn, color: "rgba(255,255,255,0.04)" },
+          horzLines: { visible: isGridOn, color: "rgba(255,255,255,0.04)" },
         },
         crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
         rightPriceScale: {
@@ -903,7 +1253,7 @@
           borderColor: "rgba(255,255,255,0.08)",
           timeVisible: true,
           secondsVisible: false,
-          rightOffset: isMobile ? 8 : 14,
+          rightOffset: isMobile ? 6 : 14,
           barSpacing: isMobile ? 6 : 8,
         },
         handleScroll: {
@@ -942,6 +1292,8 @@
         wickDownColor: "#f23645",
       });
 
+      applyChartThemeAndGrid();
+
       chart.timeScale().subscribeVisibleLogicalRangeChange(() => {
         lastSyncSig = "";
         renderSmcOverlay();
@@ -950,12 +1302,11 @@
 
       const ro = new ResizeObserver(() => resizeCanvases());
       ro.observe(document.getElementById("chart-stage"));
-      window.addEventListener("orientationchange", () => setTimeout(resizeCanvases, 150));
+      window.addEventListener("orientationchange", () => setTimeout(resizeCanvases, 160));
       resizeCanvases();
       setupDrawingEvents();
     }
 
-    // Continuous rAF fingerprint sync: locks overlays to BOTH horizontal AND vertical price scaling at 60/120fps
     function startSyncLoop() {
       function tick() {
         if (chart && candleSeries && smcData && smcData.candles && smcData.candles.length > 1) {
@@ -1005,7 +1356,7 @@
     }
 
     function getPlotBounds(w, h) {
-      let priceW = 62;
+      let priceW = 60;
       let timeH = 26;
       try {
         const pw = chart.priceScale("right").width();
@@ -1014,11 +1365,10 @@
         if (th > 10) timeH = th;
       } catch (e) {}
 
-      // Keep watermark aligned neatly inside bottom-right of plot area
       const wm = document.getElementById("chart-watermark");
       if (wm) {
-        wm.style.right = (priceW + 10) + "px";
-        wm.style.bottom = (timeH + 8) + "px";
+        wm.style.right = (priceW + 8) + "px";
+        wm.style.bottom = (timeH + 6) + "px";
       }
 
       return {
@@ -1047,19 +1397,25 @@
 
         if (showSkeleton) {
           const total = data.candles.length;
-          const visibleBars = window.innerWidth <= 820 ? 65 : 120;
-          chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - visibleBars), to: total + 8 });
+          const isMobile = document.body.classList.contains("mobile-mode");
+          const visibleBars = isMobile ? 55 : 120;
+          chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - visibleBars), to: total + 6 });
         }
 
-        document.getElementById("live-price").textContent = Number(data.price).toFixed(decimals);
-        const chgEl = document.getElementById("live-chg");
-        chgEl.textContent = (data.change_pct >= 0 ? "+" : "") + data.change_pct.toFixed(2) + "%";
-        chgEl.style.color = data.change_pct >= 0 ? "#089981" : "#f23645";
+        const priceText = Number(data.price).toFixed(decimals);
+        const chgText = (data.change_pct >= 0 ? "+" : "") + data.change_pct.toFixed(2) + "%";
+        const chgColor = data.change_pct >= 0 ? "#089981" : "#f23645";
+
+        document.querySelectorAll(".live-price").forEach(el => { el.textContent = priceText; });
+        document.querySelectorAll(".live-chg").forEach(el => {
+          el.textContent = chgText;
+          el.style.color = chgColor;
+        });
 
         const isBull = data.trend === 1;
         document.getElementById("trend-dot").style.background = isBull ? "#089981" : "#f23645";
         document.getElementById("trend-text").textContent =
-          `${currentSymbol} ${currentTf.toUpperCase()} • ${isBull ? "BULLISH" : "BEARISH"} (${data.last_event}) • ${data.source}`;
+          `${currentSymbol} ${currentTf.toUpperCase()} • ${isBull ? "BULLISH" : "BEARISH"} (${data.last_event})`;
 
         lastSyncSig = "";
         renderSmcOverlay();
@@ -1096,9 +1452,8 @@
       const ts = chart.timeScale();
       const lastIdx = smcData.candles.length - 1;
       const lastCandleX = ts.logicalToCoordinate(lastIdx) ?? (plotW - 20);
-      const isMobile = w <= 768;
+      const isMobile = document.body.classList.contains("mobile-mode");
 
-      // 1. Fair Value Gaps (FVG)
       if (layers.fvg && smcData.fvgs) {
         for (const f of smcData.fvgs) {
           const x1 = ts.logicalToCoordinate(f.x1);
@@ -1125,7 +1480,6 @@
         }
       }
 
-      // 2. Volumetric Order Blocks (OB)
       if (layers.ob && smcData.order_blocks) {
         for (const ob of smcData.order_blocks) {
           const x1 = ts.logicalToCoordinate(ob.x1);
@@ -1174,7 +1528,6 @@
         }
       }
 
-      // 3. Market Structure (BOS, CHoCH, Sweep x, Bubbles)
       if (layers.ms && smcData.structures) {
         for (const s of smcData.structures) {
           const x1 = ts.logicalToCoordinate(s.x1);
@@ -1211,7 +1564,6 @@
       ctx.restore();
     }
 
-    // ================= POINTER EVENTS (Works with Mouse + Android/iPhone Touch) =================
     function setupDrawingEvents() {
       const cvs = document.getElementById("draw-canvas");
 
@@ -1286,6 +1638,8 @@
       const ts = chart.timeScale();
       const all = draftDraw ? [...userDrawings, draftDraw] : userDrawings;
       const decimals = currentSymbol === "EURUSD" || currentSymbol === "GBPUSD" ? 5 : (currentSymbol === "USDJPY" ? 3 : 2);
+      const accentDraw = isLightTheme ? "#b45309" : "#f5b942";
+      const trendCol = isLightTheme ? "#0284c7" : "#5eead4";
 
       for (const d of all) {
         const x1 = ts.logicalToCoordinate(d.l1);
@@ -1293,13 +1647,13 @@
         if (x1 === null || y1 === null) continue;
 
         if (d.type === "hline") {
-          ctx.strokeStyle = "#f5b942";
+          ctx.strokeStyle = accentDraw;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(x1, y1);
           ctx.lineTo(plotW, y1);
           ctx.stroke();
-          ctx.fillStyle = "#f5b942";
+          ctx.fillStyle = accentDraw;
           ctx.font = "600 10px Inter, sans-serif";
           ctx.fillText(d.p1.toFixed(decimals), Math.max(4, x1 + 6), y1 - 4);
         } else {
@@ -1308,15 +1662,15 @@
           if (x2 === null || y2 === null) continue;
 
           if (d.type === "trend") {
-            ctx.strokeStyle = "#5eead4";
+            ctx.strokeStyle = trendCol;
             ctx.lineWidth = 1.8;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
             ctx.stroke();
           } else if (d.type === "box") {
-            ctx.fillStyle = "rgba(245, 185, 66, 0.16)";
-            ctx.strokeStyle = "#f5b942";
+            ctx.fillStyle = isLightTheme ? "rgba(180, 83, 9, 0.14)" : "rgba(245, 185, 66, 0.16)";
+            ctx.strokeStyle = accentDraw;
             ctx.lineWidth = 1.2;
             ctx.fillRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1));
             ctx.strokeRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1));
@@ -1324,12 +1678,12 @@
             const leftX = Math.min(x1, x2);
             const rightX = Math.max(x1, x2, leftX + 60);
             const levels = [
-              { r: 0, label: "0", col: "#8b95a7" },
-              { r: 0.5, label: "0.5 EQ", col: "#f5b942" },
+              { r: 0, label: "0", col: isLightTheme ? "#475569" : "#8b95a7" },
+              { r: 0.5, label: "0.5 EQ", col: accentDraw },
               { r: 0.618, label: "0.618", col: "#089981" },
-              { r: 0.705, label: "0.705 OTE", col: "#5eead4" },
+              { r: 0.705, label: "0.705 OTE", col: trendCol },
               { r: 0.786, label: "0.786", col: "#089981" },
-              { r: 1, label: "1", col: "#8b95a7" },
+              { r: 1, label: "1", col: isLightTheme ? "#475569" : "#8b95a7" },
             ];
             for (const lv of levels) {
               const pLv = d.p1 + (d.p2 - d.p1) * lv.r;
