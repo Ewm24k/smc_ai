@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GG SMC @ Catella Family — XAUUSD Smart Money Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+  <style>
+    :root {
+      --bg-void: #05060a;
+      --bg-card: rgba(14, 18, 28, 0.75);
+      --border-glass: rgba(255, 255, 255, 0.09);
+      --emerald: #089981;
+      --crimson: #f23645;
+      --gold: #f5b942;
+      --text-main: #f3f5f9;
+      --text-muted: #8b95a7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: var(--bg-void);
+      color: var(--text-main);
+      font-family: "Inter", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .web3-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(8, 153, 129, 0.16), transparent 42%),
+        radial-gradient(circle at 82% 20%, rgba(245, 185, 66, 0.15), transparent 40%),
+        radial-gradient(circle at 50% 88%, rgba(242, 54, 69, 0.12), transparent 45%),
+        #05060a;
+    }
+
+    .web3-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-emblem {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(245, 185, 66, 0.2), rgba(8, 153, 129, 0.22));
+      border: 1px solid rgba(245, 185, 66, 0.45);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 22px rgba(245, 185, 66, 0.22);
+      flex-shrink: 0;
+    }
+
+    .logo-text-wrap { display: flex; flex-direction: column; line-height: 1.15; }
+
+    .logo-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      background: linear-gradient(90deg, #ffffff, #f5b942);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem;
+      color: var(--emerald);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ================= HOME PAGE ================= */
+    #home-view {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px clamp(18px, 5vw, 56px);
+    }
+
+    .home-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(14px);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.6; }
+    }
+
+    .hero {
+      max-width: 1080px;
+      margin: 36px auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .hero-tag {
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(245, 185, 66, 0.1);
+      border: 1px solid rgba(245, 185, 66, 0.34);
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.1rem, 5.2vw, 3.9rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      max-width: 860px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(95deg, #f5b942 0%, #089981 55%, #5eead4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+      max-width: 680px;
+      line-height: 1.65;
+    }
+
+    .btn-primary {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 15px 32px;
+      border-radius: 14px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #04100d;
+      background: linear-gradient(135deg, #f5b942, #18d4a7);
+      box-shadow: 0 10px 35px rgba(8, 153, 129, 0.36), 0 0 25px rgba(245, 185, 66, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 42px rgba(8, 153, 129, 0.52), 0 0 32px rgba(245, 185, 66, 0.36);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 1040px;
+      margin-top: 22px;
+    }
+
+    .glass-card {
+      text-align: left;
+      padding: 20px;
+      border-radius: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(16px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .glass-card:hover { transform: translateY(-3px); border-color: rgba(8, 153, 129, 0.5); }
+
+    .card-kicker {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-title { font-family: "Space Grotesk", sans-serif; font-size: 1.04rem; margin-bottom: 6px; }
+    .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+    .home-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ================= PLATFORM TERMINAL ================= */
+    #platform-view {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: #0a0c12;
+      flex-direction: column;
+    }
+
+    #platform-view.active { display: flex; }
+
+    .platform-header {
+      height: 54px;
+      padding: 0 12px;
+      background: rgba(11, 14, 22, 0.98);
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+
+    .header-group { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .select-dark {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--gold);
+      border: 1px solid rgba(245, 185, 66, 0.35);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-dark option { background: #0e131f; color: #f3f5f9; }
+
+    .tf-bar { display: inline-flex; gap: 3px; background: rgba(255, 255, 255, 0.03); padding: 3px; border-radius: 8px; border: 1px solid var(--border-glass); }
+
+    .tf-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tf-btn.active, .tf-btn:hover { background: rgba(8, 153, 129, 0.25); color: #ffffff; }
+
+    .mini-btn {
+      appearance: none;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-glass);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .mini-btn.on { border-color: rgba(8, 153, 129, 0.65); color: #5eead4; background: rgba(8, 153, 129, 0.16); }
+    .mini-btn:hover { color: #ffffff; border-color: rgba(245, 185, 66, 0.5); }
+
+    .live-price-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+    }
+
+    /* ================= WORKSPACE & DRAWING TOOLS ================= */
+    .workspace {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      position: relative;
+    }
+
+    .draw-sidebar {
+      width: 48px;
+      background: rgba(11, 14, 22, 0.98);
+      border-right: 1px solid var(--border-glass);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 8px;
+      flex-shrink: 0;
+      z-index: 15;
+    }
+
+    .tool-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn:hover { background: rgba(255, 255, 255, 0.07); color: #ffffff; }
+    .tool-btn.active { background: rgba(245, 185, 66, 0.16); border-color: rgba(245, 185, 66, 0.55); color: var(--gold); }
+
+    .chart-stage {
+      flex: 1;
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      background: #0a0c12;
+    }
+
+    #lwc-container { position: absolute; inset: 0; z-index: 1; }
+    #smc-canvas { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+    #draw-canvas { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+
+    /* Bottom-right Watermark */
+    .chart-watermark {
+      position: absolute;
+      right: 76px;
+      bottom: 34px;
+      z-index: 4;
+      pointer-events: none;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(243, 245, 249, 0.34);
+      user-select: none;
+    }
+
+    .trend-badge {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      z-index: 7;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: rgba(11, 14, 22, 0.78);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(8px);
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    /* ================= SKELETON LOADER ================= */
+    #chart-skeleton {
+      position: absolute;
+      inset: 0;
+      z-index: 25;
+      background: #080a0f;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    #chart-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .sk-body { flex: 1; display: flex; min-height: 0; }
+
+    .sk-canvas {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .sk-candles {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      height: 50%;
+      opacity: 0.45;
+    }
+
+    .sk-candle {
+      width: 12px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #161b26 25%, #232b3d 50%, #161b26 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    .sk-overlay-badge {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 28px;
+      border-radius: 16px;
+      background: rgba(11, 14, 22, 0.9);
+      border: 1px solid rgba(245, 185, 66, 0.38);
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+
+    .sk-spinner {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 3px solid rgba(245, 185, 66, 0.2);
+      border-top-color: var(--gold);
+      border-right-color: var(--emerald);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ================= HUD DRAWER ================= */
+    #hud-drawer {
+      width: 285px;
+      background: rgba(11, 14, 22, 0.98);
+      border-left: 1px solid var(--border-glass);
+      padding: 14px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    #hud-drawer.open { display: flex; }
+
+    .hud-section {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .hud-section h4 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.82rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .hud-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: #d0d7e3;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+
+    .hud-check input { accent-color: var(--emerald); margin-top: 2px; }
+
+    @media (max-width: 768px) {
+      .hide-mobile { display: none; }
+      #hud-drawer { position: absolute; right: 0; top: 0; bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="web3-bg"><div class="web3-grid"></div></div>
+
+  <!-- ================= WEB3 HOME PAGE ================= -->
+  <main id="home-view">
+    <header class="home-nav">
+      <a href="#" class="brand-logo">
+        <div class="logo-emblem" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M6 16V8M6 5V7M6 17V19" stroke="#f23645" stroke-width="2" stroke-linecap="round"/>
+            <rect x="4" y="8" width="4" height="7" rx="1" fill="#f23645"/>
+            <path d="M12 18V6M12 3V5M12 19V21" stroke="#f5b942" stroke-width="2" stroke-linecap="round"/>
+            <rect x="10" y="7" width="4" height="9" rx="1" fill="#f5b942"/>
+            <path d="M18 15V7M18 4V6M18 16V18" stroke="#089981" stroke-width="2" stroke-linecap="round"/>
+            <rect x="16" y="7" width="4" height="6" rx="1" fill="#089981"/>
+          </svg>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="logo-title">GG SMC</span>
+          <span class="logo-sub">@ Catella Family</span>
+        </div>
+      </a>
+
+      <div class="status-pill">
+        <span class="pulse-dot"></span>
+        <span>GG SMC Private Engine • Zero Source Exposure</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-tag">Closed-Source Terminal • XAUUSD Default • Trinity M35 &amp; M36</div>
+      <h1>Next-Gen <span>GG SMC XAUUSD</span> Institutional Chart</h1>
+      <p>
+        Powered by <strong>GG SMC @ Catella Family</strong>. Live <strong>XAUUSD (M5)</strong> candlesticks
+        with real-time <strong>BOS, CHoCH, Sweep (x), Volumetric Order Blocks, and Fair Value Gaps</strong>
+        computed securely on our private server—with zero indicator source code exposed.
+      </p>
+
+      <button class="btn-primary" onclick="enterPlatform()">
+        <span>Enter Platform Chart</span>
+        <span>→</span>
+      </button>
+
+      <div class="cards-grid">
+        <div class="glass-card">
+          <div class="card-kicker">Market Structure</div>
+          <div class="card-title">BOS, CHoCH &amp; Sweep (x)</div>
+          <div class="card-desc">Automatic swing detection, liquidity sweep markers, and structural bubbles directly on your chart.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-kicker">Order Blocks</div>
+          <div class="card-title">Volumetric OB + % Metrics</div>
+          <div class="card-desc">Live mitigated-filtered Order Blocks with mid-line and institutional volume percentage breakdown.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-kicker">Imbalance Zones</div>
+          <div class="card-title">FVG + Mid-Line Overlay</div>
+          <div class="card-desc">Toggleable Fair Value Gaps with overlap protection and interactive M5 Box / Horizontal Ray / Fibo tools.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-kicker">Source Protection</div>
+          <div class="card-title">100% Hidden Logic</div>
+          <div class="card-desc">All GG SMC algorithms execute privately on Render—visitors only receive rendered coordinates.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="home-footer">
+      GG SMC @ Catella Family • GG SMC Concept aka catella • Always Use Stop Loss &amp; Moderate Position Sizing
+    </footer>
+  </main>
+
+  <!-- ================= PLATFORM CHART VIEW ================= -->
+  <section id="platform-view" aria-hidden="true">
+    <header class="platform-header">
+      <div class="header-group">
+        <div class="brand-logo" style="cursor:pointer;" onclick="exitPlatform()">
+          <div class="logo-emblem" style="width:30px;height:30px;border-radius:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="8" width="4" height="7" rx="1" fill="#f23645"/>
+              <rect x="10" y="6" width="4" height="10" rx="1" fill="#f5b942"/>
+              <rect x="16" y="7" width="4" height="7" rx="1" fill="#089981"/>
+            </svg>
+          </div>
+          <div class="logo-text-wrap hide-mobile">
+            <span class="logo-title" style="font-size:0.86rem;">GG SMC</span>
+            <span class="logo-sub" style="font-size:0.6rem;">@ Catella Family</span>
+          </div>
+        </div>
+
+        <select id="symbol-select" class="select-dark" onchange="changeSymbol(this.value)">
+          <option value="XAUUSD" selected>XAUUSD (Gold)</option>
+          <option value="PAXGUSDT">PAXGUSDT (24/7 Gold)</option>
+          <option value="EURUSD">EURUSD</option>
+          <option value="GBPUSD">GBPUSD</option>
+          <option value="USDJPY">USDJPY</option>
+          <option value="BTCUSDT">BTCUSDT</option>
+        </select>
+
+        <div class="tf-bar" id="tf-bar">
+          <button class="tf-btn" data-tf="1m">1m</button>
+          <button class="tf-btn" data-tf="3m">3m</button>
+          <button class="tf-btn active" data-tf="5m">5m</button>
+          <button class="tf-btn" data-tf="15m">15m</button>
+          <button class="tf-btn" data-tf="1h">1h</button>
+          <button class="tf-btn" data-tf="4h">4h</button>
+          <button class="tf-btn" data-tf="1d">1D</button>
+        </div>
+
+        <div class="live-price-box hide-mobile">
+          <span id="live-price" style="font-weight:700;color:#ffffff;">--</span>
+          <span id="live-chg" style="font-size:0.74rem;color:var(--text-muted);">--</span>
+        </div>
+      </div>
+
+      <div class="header-group">
+        <button id="btn-ms" class="mini-btn on" onclick="toggleLayer('ms')">Structure</button>
+        <button id="btn-ob" class="mini-btn on" onclick="toggleLayer('ob')">Order Blocks</button>
+        <button id="btn-fvg" class="mini-btn on" onclick="toggleLayer('fvg')">FVG</button>
+        <button class="mini-btn" onclick="toggleHud()">Checklist</button>
+        <button class="mini-btn" onclick="fetchChartData(true)">↻</button>
+        <button class="mini-btn" onclick="exitPlatform()">← Home</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <!-- Interactive Drawing Toolbar -->
+      <aside class="draw-sidebar" title="Drawing Tools">
+        <button class="tool-btn active" data-tool="cursor" title="Cursor / Pan & Zoom">⌖</button>
+        <button class="tool-btn" data-tool="hline" title="Horizontal Ray / Line">―</button>
+        <button class="tool-btn" data-tool="box" title="FVG / Zone Box">▭</button>
+        <button class="tool-btn" data-tool="trend" title="Trend Line">╱</button>
+        <button class="tool-btn" data-tool="fibo" title="Fibonacci Retracement (Discount 0.618-0.786)">≡</button>
+        <button class="tool-btn" onclick="undoDrawing()" title="Undo Last Drawing">↶</button>
+        <button class="tool-btn" onclick="clearDrawings()" title="Clear All Drawings" style="color:#f23645;">✕</button>
+      </aside>
+
+      <div class="chart-stage" id="chart-stage">
+        <!-- Skeleton Loader -->
+        <div id="chart-skeleton">
+          <div class="sk-body">
+            <div class="sk-canvas">
+              <div class="sk-candles">
+                <div class="sk-candle" style="height:42%;"></div>
+                <div class="sk-candle" style="height:68%;"></div>
+                <div class="sk-candle" style="height:52%;"></div>
+                <div class="sk-candle" style="height:82%;"></div>
+                <div class="sk-candle" style="height:62%;"></div>
+                <div class="sk-candle" style="height:92%;"></div>
+                <div class="sk-candle" style="height:74%;"></div>
+                <div class="sk-candle" style="height:96%;"></div>
+                <div class="sk-candle" style="height:56%;"></div>
+                <div class="sk-candle" style="height:79%;"></div>
+              </div>
+              <div class="sk-overlay-badge">
+                <div class="sk-spinner"></div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;">GG SMC @ Catella Family</div>
+                <div style="font-size:0.78rem;color:var(--text-muted);" id="sk-status">
+                  Connecting to GG SMC Private Engine (XAUUSD M5)...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="lwc-container"></div>
+        <canvas id="smc-canvas"></canvas>
+        <canvas id="draw-canvas"></canvas>
+
+        <div class="trend-badge" id="trend-badge">
+          <span id="trend-dot" style="width:8px;height:8px;border-radius:50%;background:var(--gold);"></span>
+          <span id="trend-text">GG SMC • Loading...</span>
+        </div>
+
+        <!-- Bottom-Right Watermark -->
+        <div class="chart-watermark">GG SMC Concept aka catella</div>
+      </div>
+
+      <!-- Checklist HUD -->
+      <aside id="hud-drawer">
+        <div class="hud-section">
+          <h4>Trinity M35 (FVG Filter)</h4>
+          <label class="hud-check"><input type="checkbox"/> Mark M5 FVG (Box / Ray)</label>
+          <label class="hud-check"><input type="checkbox"/> Confirm inside M3 FVG</label>
+          <label class="hud-check"><input type="checkbox"/> Sync inside M15 FVG</label>
+          <label class="hud-check"><input type="checkbox"/> Scalp Sniper entry timing</label>
+        </div>
+        <div class="hud-section">
+          <h4>M36 Concept (SFP + CHoCH)</h4>
+          <label class="hud-check"><input type="checkbox"/> Valid CHoCH: HL formed before new HH</label>
+          <label class="hud-check"><input type="checkbox"/> SFP 2 FVG = Valid | 1 FVG = Moderate (Reduce Lot)</label>
+          <label class="hud-check"><input type="checkbox"/> Fibo Discount (0.618–0.786) aligned</label>
+        </div>
+        <div class="hud-section">
+          <h4>Catella Risk Rule</h4>
+          <p style="font-size:0.76rem;color:var(--text-muted);line-height:1.5;">
+            Never full margin. Always place Stop Loss (SL) and enter with moderate lot sizing.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <script>
+    // Your private Render server URL
+    const API_BASE = "https://smc-ai-a4mq.onrender.com";
+
+    let currentSymbol = "XAUUSD";
+    let currentTf = "5m";
+    let chart = null;
+    let candleSeries = null;
+    let smcData = null;
+    let pollTimer = null;
+
+    const layers = { ms: true, ob: true, fvg: true };
+    let activeTool = "cursor";
+    let userDrawings = [];
+    let draftDraw = null;
+
+    function enterPlatform() {
+      document.getElementById("home-view").style.display = "none";
+      const p = document.getElementById("platform-view");
+      p.classList.add("active");
+      p.setAttribute("aria-hidden", "false");
+
+      if (!chart) {
+        initChart();
+        fetchChartData(true);
+        pollTimer = setInterval(() => fetchChartData(false), 12000);
+      }
+    }
+
+    function exitPlatform() {
+      document.getElementById("platform-view").classList.remove("active");
+      document.getElementById("platform-view").setAttribute("aria-hidden", "true");
+      document.getElementById("home-view").style.display = "flex";
+    }
+
+    function toggleHud() {
+      document.getElementById("hud-drawer").classList.toggle("open");
+      setTimeout(resizeCanvases, 50);
+    }
+
+    function toggleLayer(name) {
+      layers[name] = !layers[name];
+      document.getElementById("btn-" + name).classList.toggle("on", layers[name]);
+      renderSmcOverlay();
+    }
+
+    function changeSymbol(sym) {
+      currentSymbol = sym;
+      userDrawings = [];
+      fetchChartData(true);
+    }
+
+    document.getElementById("tf-bar").addEventListener("click", (e) => {
+      const btn = e.target.closest(".tf-btn");
+      if (!btn) return;
+      document.querySelectorAll(".tf-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentTf = btn.dataset.tf;
+      userDrawings = [];
+      fetchChartData(true);
+    });
+
+    document.querySelectorAll(".tool-btn[data-tool]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tool-btn[data-tool]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeTool = btn.dataset.tool;
+        const drawCanvas = document.getElementById("draw-canvas");
+        drawCanvas.style.pointerEvents = activeTool === "cursor" ? "none" : "auto";
+        drawCanvas.style.cursor = activeTool === "cursor" ? "default" : "crosshair";
+      });
+    });
+
+    function undoDrawing() { userDrawings.pop(); renderDrawOverlay(); }
+    function clearDrawings() { userDrawings = []; draftDraw = null; renderDrawOverlay(); }
+
+    function initChart() {
+      const container = document.getElementById("lwc-container");
+      chart = LightweightCharts.createChart(container, {
+        layout: {
+          background: { type: "solid", color: "#0a0c12" },
+          textColor: "#9ba4b5",
+        },
+        grid: {
+          vertLines: { color: "rgba(255,255,255,0.035)" },
+          horzLines: { color: "rgba(255,255,255,0.035)" },
+        },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+        rightPriceScale: { borderColor: "rgba(255,255,255,0.08)" },
+        timeScale: {
+          borderColor: "rgba(255,255,255,0.08)",
+          timeVisible: true,
+          secondsVisible: false,
+          rightOffset: 12,
+        },
+        localization: {
+          timeFormatter: (t) => {
+            const d = new Date(t * 1000);
+            return d.toLocaleString("en-MY", {
+              timeZone: "Asia/Kuala_Lumpur",
+              month: "short",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            });
+          },
+        },
+      });
+
+      candleSeries = chart.addCandlestickSeries({
+        upColor: "#089981",
+        downColor: "#f23645",
+        borderUpColor: "#089981",
+        borderDownColor: "#f23645",
+        wickUpColor: "#089981",
+        wickDownColor: "#f23645",
+      });
+
+      chart.timeScale().subscribeVisibleLogicalRangeChange(() => {
+        requestAnimationFrame(() => {
+          renderSmcOverlay();
+          renderDrawOverlay();
+        });
+      });
+
+      const ro = new ResizeObserver(() => resizeCanvases());
+      ro.observe(document.getElementById("chart-stage"));
+      resizeCanvases();
+      setupDrawingEvents();
+    }
+
+    function resizeCanvases() {
+      const stage = document.getElementById("chart-stage");
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      if (chart) chart.resize(w, h);
+
+      const dpr = window.devicePixelRatio || 1;
+      for (const id of ["smc-canvas", "draw-canvas"]) {
+        const cvs = document.getElementById(id);
+        cvs.width = Math.floor(w * dpr);
+        cvs.height = Math.floor(h * dpr);
+        cvs.style.width = w + "px";
+        cvs.style.height = h + "px";
+      }
+      renderSmcOverlay();
+      renderDrawOverlay();
+    }
+
+    async function fetchChartData(showSkeleton) {
+      const sk = document.getElementById("chart-skeleton");
+      const skStatus = document.getElementById("sk-status");
+      if (showSkeleton) {
+        skStatus.textContent = `Loading ${currentSymbol} (${currentTf.toUpperCase()}) • GG SMC Private Engine...`;
+        sk.classList.remove("hidden");
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/gg-smc?symbol=${encodeURIComponent(currentSymbol)}&tf=${encodeURIComponent(currentTf)}`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "API error");
+
+        smcData = data;
+        const decimals = currentSymbol === "EURUSD" || currentSymbol === "GBPUSD" ? 5 : (currentSymbol === "USDJPY" ? 3 : 2);
+        candleSeries.applyOptions({ priceFormat: { type: "price", precision: decimals, minMove: Math.pow(10, -decimals) } });
+        candleSeries.setData(data.candles);
+
+        if (showSkeleton) {
+          const total = data.candles.length;
+          chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - 110), to: total + 10 });
+        }
+
+        document.getElementById("live-price").textContent = Number(data.price).toFixed(decimals);
+        const chgEl = document.getElementById("live-chg");
+        chgEl.textContent = (data.change_pct >= 0 ? "+" : "") + data.change_pct.toFixed(2) + "%";
+        chgEl.style.color = data.change_pct >= 0 ? "#089981" : "#f23645";
+
+        const isBull = data.trend === 1;
+        document.getElementById("trend-dot").style.background = isBull ? "#089981" : "#f23645";
+        document.getElementById("trend-text").textContent =
+          `${currentSymbol} ${currentTf.toUpperCase()} • ${isBull ? "BULLISH" : "BEARISH"} (${data.last_event}) • ${data.source}`;
+
+        renderSmcOverlay();
+        renderDrawOverlay();
+        sk.classList.add("hidden");
+      } catch (err) {
+        console.error(err);
+        if (showSkeleton) {
+          skStatus.textContent = "Waking up Render server (~45s on free tier)... retrying...";
+          setTimeout(() => fetchChartData(true), 4000);
+        }
+      }
+    }
+
+    function renderSmcOverlay() {
+      const cvs = document.getElementById("smc-canvas");
+      if (!cvs || !chart || !candleSeries || !smcData) return;
+      const ctx = cvs.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const w = cvs.width / dpr;
+      const h = cvs.height / dpr;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      const ts = chart.timeScale();
+      const lastIdx = smcData.candles.length - 1;
+      const rightEdgeX = ts.logicalToCoordinate(lastIdx + 8) ?? (w - 70);
+
+      // 1. Fair Value Gaps (FVG)
+      if (layers.fvg && smcData.fvgs) {
+        for (const f of smcData.fvgs) {
+          const x1 = ts.logicalToCoordinate(f.x1);
+          const y1 = candleSeries.priceToCoordinate(f.top);
+          const y2 = candleSeries.priceToCoordinate(f.btm);
+          if (x1 === null || y1 === null || y2 === null) continue;
+          const x2 = Math.max(x1 + 20, ts.logicalToCoordinate(f.x2) ?? rightEdgeX);
+          const boxTop = Math.min(y1, y2);
+          const boxH = Math.max(2, Math.abs(y2 - y1));
+
+          ctx.fillStyle = f.bull ? "rgba(8, 153, 129, 0.16)" : "rgba(242, 54, 69, 0.16)";
+          ctx.fillRect(x1, boxTop, x2 - x1, boxH);
+
+          const ym = candleSeries.priceToCoordinate(f.mid);
+          if (ym !== null) {
+            ctx.strokeStyle = f.bull ? "rgba(8, 153, 129, 0.7)" : "rgba(242, 54, 69, 0.7)";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(x1, ym);
+            ctx.lineTo(x2, ym);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // 2. Volumetric Order Blocks (OB)
+      if (layers.ob && smcData.order_blocks) {
+        for (const ob of smcData.order_blocks) {
+          const x1 = ts.logicalToCoordinate(ob.x1);
+          const y1 = candleSeries.priceToCoordinate(ob.top);
+          const y2 = candleSeries.priceToCoordinate(ob.btm);
+          if (x1 === null || y1 === null || y2 === null) continue;
+          const x2 = Math.max(x1 + 24, rightEdgeX);
+          const boxTop = Math.min(y1, y2);
+          const boxH = Math.max(3, Math.abs(y2 - y1));
+
+          ctx.fillStyle = ob.bull ? "rgba(8, 153, 129, 0.14)" : "rgba(242, 54, 69, 0.14)";
+          ctx.fillRect(x1, boxTop, x2 - x1, boxH);
+
+          const ym = candleSeries.priceToCoordinate(ob.avg);
+          if (ym !== null) {
+            ctx.strokeStyle = ob.bull ? "#089981" : "#f23645";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 3]);
+            ctx.beginPath();
+            ctx.moveTo(x1, ym);
+            ctx.lineTo(x2, ym);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = ob.bull ? "#089981" : "#f23645";
+            ctx.font = "600 10px Inter, sans-serif";
+            ctx.fillText(`OB ${ob.pct}%`, x2 - 48, ym - 4);
+          }
+        }
+      }
+
+      // 3. Market Structure (BOS, CHoCH, Sweep x, Bubbles)
+      if (layers.ms && smcData.structures) {
+        for (const s of smcData.structures) {
+          const x1 = ts.logicalToCoordinate(s.x1);
+          const x2 = ts.logicalToCoordinate(s.x2);
+          const y = candleSeries.priceToCoordinate(s.y);
+          if (x1 === null || x2 === null || y === null) continue;
+
+          const color = s.dir === 1 ? "#089981" : "#f23645";
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1.3;
+          if (s.style === "dashed") ctx.setLineDash([5, 4]);
+          else if (s.style === "dotted") ctx.setLineDash([2, 3]);
+          else ctx.setLineDash([]);
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y);
+          ctx.lineTo(x2, y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Origin bubble
+          ctx.fillStyle = s.dir === 1 ? "rgba(8, 153, 129, 0.35)" : "rgba(242, 54, 69, 0.35)";
+          ctx.beginPath();
+          ctx.arc(x1, y, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Structure label
+          ctx.fillStyle = color;
+          ctx.font = "700 10px Space Grotesk, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(s.txt, (x1 + x2) / 2, s.dir === 1 ? y - 5 : y + 12);
+          ctx.textAlign = "left";
+        }
+      }
+    }
+
+    // ================= USER DRAWING TOOLS (H-Ray, Box, Trend, Fibo) =================
+    function setupDrawingEvents() {
+      const cvs = document.getElementById("draw-canvas");
+
+      function getCoords(e) {
+        const rect = cvs.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const logical = chart.timeScale().coordinateToLogical(x);
+        const price = candleSeries.coordinateToPrice(y);
+        return { logical, price };
+      }
+
+      cvs.addEventListener("mousedown", (e) => {
+        if (activeTool === "cursor") return;
+        const pt = getCoords(e);
+        if (pt.logical === null || pt.price === null) return;
+
+        if (activeTool === "hline") {
+          userDrawings.push({ type: "hline", l1: pt.logical, p1: pt.price });
+          renderDrawOverlay();
+          return;
+        }
+        draftDraw = { type: activeTool, l1: pt.logical, p1: pt.price, l2: pt.logical, p2: pt.price };
+        renderDrawOverlay();
+      });
+
+      cvs.addEventListener("mousemove", (e) => {
+        if (!draftDraw) return;
+        const pt = getCoords(e);
+        if (pt.logical === null || pt.price === null) return;
+        draftDraw.l2 = pt.logical;
+        draftDraw.p2 = pt.price;
+        renderDrawOverlay();
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!draftDraw) return;
+        userDrawings.push(draftDraw);
+        draftDraw = null;
+        renderDrawOverlay();
+      });
+    }
+
+    function renderDrawOverlay() {
+      const cvs = document.getElementById("draw-canvas");
+      if (!cvs || !chart || !candleSeries) return;
+      const ctx = cvs.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const w = cvs.width / dpr;
+      const h = cvs.height / dpr;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      const ts = chart.timeScale();
+      const all = draftDraw ? [...userDrawings, draftDraw] : userDrawings;
+
+      for (const d of all) {
+        const x1 = ts.logicalToCoordinate(d.l1);
+        const y1 = candleSeries.priceToCoordinate(d.p1);
+        if (x1 === null || y1 === null) continue;
+
+        if (d.type === "hline") {
+          ctx.strokeStyle = "#f5b942";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(w - 60, y1);
+          ctx.stroke();
+          ctx.fillStyle = "#f5b942";
+          ctx.font = "600 10px Inter, sans-serif";
+          ctx.fillText(d.p1.toFixed(2), x1 + 6, y1 - 4);
+        } else {
+          const x2 = ts.logicalToCoordinate(d.l2);
+          const y2 = candleSeries.priceToCoordinate(d.p2);
+          if (x2 === null || y2 === null) continue;
+
+          if (d.type === "trend") {
+            ctx.strokeStyle = "#5eead4";
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+          } else if (d.type === "box") {
+            ctx.fillStyle = "rgba(245, 185, 66, 0.16)";
+            ctx.strokeStyle = "#f5b942";
+            ctx.lineWidth = 1.2;
+            ctx.fillRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1));
+            ctx.strokeRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1));
+          } else if (d.type === "fibo") {
+            const leftX = Math.min(x1, x2);
+            const rightX = Math.max(x1, x2, leftX + 60);
+            const levels = [
+              { r: 0, label: "0", col: "#8b95a7" },
+              { r: 0.5, label: "0.5 EQ", col: "#f5b942" },
+              { r: 0.618, label: "0.618", col: "#089981" },
+              { r: 0.705, label: "0.705 OTE", col: "#5eead4" },
+              { r: 0.786, label: "0.786", col: "#089981" },
+              { r: 1, label: "1", col: "#8b95a7" },
+            ];
+            for (const lv of levels) {
+              const pLv = d.p1 + (d.p2 - d.p1) * lv.r;
+              const yLv = candleSeries.priceToCoordinate(pLv);
+              if (yLv === null) continue;
+              ctx.strokeStyle = lv.col;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(leftX, yLv);
+              ctx.lineTo(rightX, yLv);
+              ctx.stroke();
+              ctx.fillStyle = lv.col;
+              ctx.font = "600 10px Inter, sans-serif";
+              ctx.fillText(`${lv.label} (${pLv.toFixed(2)})`, leftX + 4, yLv - 3);
+            }
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
