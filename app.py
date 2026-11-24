@@ -11,7 +11,6 @@ app = Flask(__name__)
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "").strip()
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 
-# Simple in-memory cache so Render stays fast on free tier
 MARKET_CACHE = {}
 CACHE_TTL_SEC = 5
 
@@ -109,7 +108,7 @@ MANDATORY COMMUNICATION RULES:
 
 
 # ==============================================================================
-# HIDDEN GG SMC ENGINE (Runs Privately on Render Server)
+# HIDDEN GG SMC ENGINE (Matches BigBeluga / GG SMC v6 Logic, up to 5000 bars)
 # ==============================================================================
 
 def resample_candles(candles, group_size):
@@ -133,22 +132,22 @@ def resample_candles(candles, group_size):
 
 def fetch_yahoo_candles(ticker, tf):
     tf_map = {
-        "1m": ("1m", "5d", 1),
-        "3m": ("1m", "5d", 3),
-        "5m": ("5m", "5d", 1),
+        "1m": ("1m", "7d", 1),
+        "3m": ("1m", "7d", 3),
+        "5m": ("5m", "1mo", 1),
         "15m": ("15m", "1mo", 1),
-        "1h": ("1h", "3mo", 1),
-        "4h": ("1h", "3mo", 4),
-        "1d": ("1d", "2y", 1),
+        "1h": ("1h", "6mo", 1),
+        "4h": ("1h", "6mo", 4),
+        "1d": ("1d", "5y", 1),
     }
-    y_int, y_range, resample_n = tf_map.get(tf, ("5m", "5d", 1))
+    y_int, y_range, resample_n = tf_map.get(tf, ("5m", "1mo", 1))
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
     headers = {"User-Agent": "Mozilla/5.0"}
     res = requests.get(
         url,
         params={"interval": y_int, "range": y_range, "includePrePost": "true"},
         headers=headers,
-        timeout=12,
+        timeout=15,
     )
     res.raise_for_status()
     data = res.json()
@@ -189,7 +188,7 @@ def fetch_yahoo_candles(ticker, tf):
     candles.sort(key=lambda x: x["time"])
     if resample_n > 1:
         candles = resample_candles(candles, resample_n)
-    return candles[-350:]
+    return candles[-5000:]
 
 
 def fetch_binance_candles(symbol, tf):
@@ -197,7 +196,7 @@ def fetch_binance_candles(symbol, tf):
     url = "https://data-api.binance.vision/api/v3/klines"
     res = requests.get(
         url,
-        params={"symbol": symbol, "interval": valid_tf, "limit": 350},
+        params={"symbol": symbol, "interval": valid_tf, "limit": 1000},
         timeout=12,
     )
     res.raise_for_status()
@@ -253,6 +252,14 @@ def get_market_candles(symbol, tf):
     if len(candles) >= 30:
         MARKET_CACHE[key] = {"ts": now, "candles": candles, "source": source}
     return candles, source
+
+
+def format_vol(val):
+    if val >= 1_000_000:
+        return f"{val / 1_000_000:.2f}M"
+    if val >= 1_000:
+        return f"{val / 1_000:.2f}K"
+    return f"{round(val, 2)}"
 
 
 def compute_atr(candles, period=200):
@@ -335,6 +342,29 @@ def check_overlap_fvgs(bl_fvgs, br_fvgs):
                 br_fvgs.pop(i)
 
 
+def update_ob_umt(ob_item):
+    if ob_item["dir"] == 1:
+        if ob_item["move"] == 1:
+            ob_item["blPOS"] += 1
+            ob_item["move"] = 2
+        elif ob_item["move"] == 2:
+            ob_item["blPOS"] += 1
+            ob_item["move"] = 3
+        else:
+            ob_item["brPOS"] += 1
+            ob_item["move"] = 1
+    else:
+        if ob_item["move"] == 1:
+            ob_item["brPOS"] += 1
+            ob_item["move"] = 2
+        elif ob_item["move"] == 2:
+            ob_item["brPOS"] += 1
+            ob_item["move"] = 3
+        else:
+            ob_item["blPOS"] += 1
+            ob_item["move"] = 1
+
+
 def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
     n = len(candles)
     if n < 20:
@@ -398,11 +428,9 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
         l = candles[i]["low"]
         c = candles[i]["close"]
         o = candles[i]["open"]
-        v = candles[i]["volume"]
         c1 = candles[i - 1]["close"] if i >= 1 else c
         o1 = candles[i - 1]["open"] if i >= 1 else o
 
-        # Pivot highs / lows (confirmed mslen bars later)
         if i >= mslen * 2:
             c_idx = i - mslen
             win_h = [candles[j]["high"] for j in range(c_idx - mslen, c_idx + mslen + 1)]
@@ -440,17 +468,28 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
 
         idbull = find_ext(i, ms_loc, False, True)
         idbear = find_ext(i, ms_loc, True, True)
-        ob_len_idx_bear = i - idbear
-        ob_len_idx_bull = i - idbull
-        atr_bear = atr[ob_len_idx_bear]
-        atr_bull = atr[ob_len_idx_bull]
+        ob_idx_bear = i - idbear
+        ob_idx_bull = i - idbull
+        atr_bear = atr[ob_idx_bear]
+        atr_bull = atr[ob_idx_bull]
 
-        btm_p = (
-            max(candles[ob_len_idx_bear]["low"], candles[ob_len_idx_bear]["high"] - atr_bear)
-        )
-        top_p = (
-            min(candles[ob_len_idx_bull]["high"], candles[ob_len_idx_bull]["low"] + atr_bull)
-        )
+        btm_p = max(candles[ob_idx_bear]["low"], candles[ob_idx_bear]["high"] - atr_bear)
+        top_p = min(candles[ob_idx_bull]["high"], candles[ob_idx_bull]["low"] + atr_bull)
+
+        def make_ob(is_bull, cords, ob_i):
+            c_bar = candles[ob_i]
+            return {
+                "bull": is_bull,
+                "top": cords if is_bull else c_bar["high"],
+                "btm": c_bar["low"] if is_bull else cords,
+                "avg": (cords + c_bar["low"]) / 2.0 if is_bull else (c_bar["high"] + cords) / 2.0,
+                "x1": ob_i,
+                "vol": c_bar["volume"],
+                "dir": 1 if c_bar["close"] > c_bar["open"] else -1,
+                "move": 1,
+                "blPOS": 1,
+                "brPOS": 1,
+            }
 
         if ms_start == 0:
             ms_bos = h
@@ -479,14 +518,7 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                 bldw.insert(0, {"x1": i, "x2": i, "y": h, "txt": "CHoCH", "dir": 1, "style": "dashed"})
             elif c <= ms_choch:
                 ms_txt = "CHoCH"
-                blob.insert(0, {
-                    "bull": True,
-                    "top": top_p,
-                    "btm": candles[ob_len_idx_bull]["low"],
-                    "avg": (top_p + candles[ob_len_idx_bull]["low"]) / 2.0,
-                    "x1": ob_len_idx_bull,
-                    "vol": candles[ob_len_idx_bull]["volume"],
-                })
+                blob.insert(0, make_ob(True, top_p, ob_idx_bull))
                 ms_trend = -1
                 ms_choch = ms_bos
                 ms_bos = None
@@ -499,14 +531,7 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                 brdw[0]["style"] = "solid"
             elif c >= ms_bos:
                 ms_txt = "CHoCH"
-                brob.insert(0, {
-                    "bull": False,
-                    "top": candles[ob_len_idx_bear]["high"],
-                    "btm": btm_p,
-                    "avg": (candles[ob_len_idx_bear]["high"] + btm_p) / 2.0,
-                    "x1": ob_len_idx_bear,
-                    "vol": candles[ob_len_idx_bear]["volume"],
-                })
+                brob.insert(0, make_ob(False, btm_p, ob_idx_bear))
                 ms_trend = 1
                 ms_bos = None
                 ms_start = 2
@@ -560,14 +585,7 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                     ms_xloc = i
                 elif ms_bos is not None and c <= ms_bos:
                     ms_txt = "BOS"
-                    brob.insert(0, {
-                        "bull": False,
-                        "top": candles[ob_len_idx_bear]["high"],
-                        "btm": btm_p,
-                        "avg": (candles[ob_len_idx_bear]["high"] + btm_p) / 2.0,
-                        "x1": ob_len_idx_bear,
-                        "vol": candles[ob_len_idx_bear]["volume"],
-                    })
+                    brob.insert(0, make_ob(False, btm_p, ob_idx_bear))
                     ext_id = find_ext(i, ms_loc, True, False)
                     ms_xloc = i
                     ms_bos = None
@@ -588,14 +606,7 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                     bldw.insert(0, {"x1": i, "x2": i, "y": h, "txt": "CHoCH", "dir": 1, "style": "dashed"})
                 elif c >= ms_choch:
                     ms_txt = "CHoCH"
-                    blob.insert(0, {
-                        "bull": True,
-                        "top": top_p,
-                        "btm": candles[ob_len_idx_bull]["low"],
-                        "avg": (top_p + candles[ob_len_idx_bull]["low"]) / 2.0,
-                        "x1": ob_len_idx_bull,
-                        "vol": candles[ob_len_idx_bull]["volume"],
-                    })
+                    blob.insert(0, make_ob(True, top_p, ob_idx_bull))
                     ext_id = find_ext(i, ms_loc, False, False)
                     if ms_bos is None:
                         ms_choch = candles[i - ext_id]["low"]
@@ -664,14 +675,7 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                     ms_xloc = i
                 elif ms_bos is not None and c >= ms_bos:
                     ms_txt = "BOS"
-                    blob.insert(0, {
-                        "bull": True,
-                        "top": top_p,
-                        "btm": candles[ob_len_idx_bull]["low"],
-                        "avg": (top_p + candles[ob_len_idx_bull]["low"]) / 2.0,
-                        "x1": ob_len_idx_bull,
-                        "vol": candles[ob_len_idx_bull]["volume"],
-                    })
+                    blob.insert(0, make_ob(True, top_p, ob_idx_bull))
                     ext_id = find_ext(i, ms_loc, False, False)
                     ms_xloc = i
                     ms_bos = None
@@ -692,14 +696,7 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                     brdw.insert(0, {"x1": i, "x2": i, "y": l, "txt": "CHoCH", "dir": -1, "style": "dashed"})
                 elif c <= ms_choch:
                     ms_txt = "CHoCH"
-                    brob.insert(0, {
-                        "bull": False,
-                        "top": candles[ob_len_idx_bear]["high"],
-                        "btm": btm_p,
-                        "avg": (candles[ob_len_idx_bear]["high"] + btm_p) / 2.0,
-                        "x1": ob_len_idx_bear,
-                        "vol": candles[ob_len_idx_bear]["volume"],
-                    })
+                    brob.insert(0, make_ob(False, btm_p, ob_idx_bear))
                     ext_id = find_ext(i, ms_loc, True, False)
                     if ms_bos is None:
                         ms_choch = candles[i - ext_id]["high"]
@@ -726,14 +723,20 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                     brdw[0]["txt"] = "CHoCH"
                     brdw[0]["style"] = "solid"
 
-        # OB mitigation (Close method)
-        for idx_ob in range(len(blob) - 1, -1, -1):
-            if min(c, o) < blob[idx_ob]["btm"]:
-                blob.pop(idx_ob)
-        for idx_ob in range(len(brob) - 1, -1, -1):
-            if max(c, o) > brob[idx_ob]["top"]:
-                brob.pop(idx_ob)
-        check_overlap_obs(blob, brob)
+        # OB mitigation (confirmed bars only, matching barstate.isconfirmed)
+        if i < n - 1:
+            for idx_ob in range(len(blob) - 1, -1, -1):
+                if min(c, o) < blob[idx_ob]["btm"]:
+                    blob.pop(idx_ob)
+            for idx_ob in range(len(brob) - 1, -1, -1):
+                if max(c, o) > brob[idx_ob]["top"]:
+                    brob.pop(idx_ob)
+            check_overlap_obs(blob, brob)
+
+        for item in blob:
+            update_ob_umt(item)
+        for item in brob:
+            update_ob_umt(item)
 
         # FVG detection & mitigation
         if i >= 3:
@@ -770,36 +773,55 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                 br_fvg.pop(idx_f)
         check_overlap_fvgs(bl_fvg, br_fvg)
 
-    # Finalize Order Blocks with volume %
+    # Slice latest 1000 candles for fast rendering while preserving full 5000-bar structure coordinates
+    view_start = max(0, n - 1000)
+
     final_obs = []
     for grp in (blob[:ob_last], brob[:ob_last]):
         tot_v = sum(item["vol"] for item in grp) or 1.0
         for item in grp:
             pct = math.floor((item["vol"] / tot_v) * 100)
+            rel_x1 = max(0, item["x1"] - view_start)
+            rel_bl = min((n - 1) - view_start, max(0, (item["x1"] + item["blPOS"]) - view_start))
+            rel_br = min((n - 1) - view_start, max(0, (item["x1"] + item["brPOS"]) - view_start))
             final_obs.append({
                 "bull": item["bull"],
                 "top": item["top"],
                 "btm": item["btm"],
                 "avg": item["avg"],
-                "x1": item["x1"],
-                "x2": n - 1,
-                "pct": pct,
+                "x1": rel_x1,
+                "x2": (n - 1) - view_start,
+                "xlocbl": rel_bl,
+                "xlocbr": rel_br,
+                "vol_label": f"{format_vol(item['vol'])} ({pct}%)",
             })
 
     final_fvgs = []
     for item in bl_fvg[:fvg_num] + br_fvg[:fvg_num]:
-        final_fvgs.append({
-            "bull": item["bull"],
-            "top": item["top"],
-            "btm": item["btm"],
-            "mid": item["mid"],
-            "x1": item["x1"],
-            "x2": n - 1,
-        })
+        if item["x1"] >= view_start - 100:
+            final_fvgs.append({
+                "bull": item["bull"],
+                "top": item["top"],
+                "btm": item["btm"],
+                "mid": item["mid"],
+                "x1": max(0, item["x1"] - view_start),
+                "x2": (n - 1) - view_start,
+            })
 
-    structures = bldw[:swing_limit] + brdw[:swing_limit]
+    structures = []
+    for s in bldw[:swing_limit] + brdw[:swing_limit]:
+        if s["x2"] >= view_start:
+            structures.append({
+                "x1": max(0, s["x1"] - view_start),
+                "x2": s["x2"] - view_start,
+                "y": s["y"],
+                "txt": s["txt"],
+                "dir": s["dir"],
+                "style": s["style"],
+            })
 
     return {
+        "candles": candles[view_start:],
         "structures": structures,
         "order_blocks": final_obs,
         "fvgs": final_fvgs,
@@ -832,7 +854,7 @@ def api_gg_smc():
             "source": source,
             "price": last_c["close"],
             "change_pct": round(chg_pct, 3),
-            "candles": candles,
+            "candles": smc["candles"],
             "structures": smc["structures"],
             "order_blocks": smc["order_blocks"],
             "fvgs": smc["fvgs"],
