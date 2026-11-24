@@ -246,6 +246,122 @@
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
+    /* ================= PASSWORD ACCESS GATE MODAL ================= */
+    #auth-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(4, 6, 12, 0.82);
+      backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    #auth-modal.open { display: flex; }
+
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+      border-radius: 20px;
+      background: rgba(13, 17, 27, 0.96);
+      border: 1px solid rgba(245, 185, 66, 0.38);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), 0 0 32px rgba(8, 153, 129, 0.16);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .auth-card.shake {
+      animation: shakeAnim 0.35s ease;
+    }
+
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .auth-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .auth-lock-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(245, 185, 66, 0.14);
+      border: 1px solid rgba(245, 185, 66, 0.4);
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .auth-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 13px 44px 13px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      font-size: 0.98rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .auth-input:focus {
+      border-color: var(--gold);
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 4px 6px;
+    }
+
+    .auth-error {
+      display: none;
+      font-size: 0.8rem;
+      color: var(--crimson);
+      font-weight: 600;
+    }
+
+    .auth-error.show { display: block; }
+
+    .auth-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .btn-cancel {
+      appearance: none;
+      cursor: pointer;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-glass);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
     /* ================= PLATFORM TERMINAL ================= */
     #platform-view {
       display: none;
@@ -443,9 +559,7 @@
     #trend-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* ================= LIGHT THEME (Black & White Candles on White Background) ================= */
-    body.light-chart #platform-view {
-      background: #ffffff;
-    }
+    body.light-chart #platform-view { background: #ffffff; }
     body.light-chart .desktop-header,
     body.light-chart .mobile-header,
     body.light-chart .draw-sidebar,
@@ -463,57 +577,20 @@
       color: #0f172a;
       border-color: rgba(0, 0, 0, 0.2);
     }
-    body.light-chart .select-dark option {
-      background: #ffffff;
-      color: #0f172a;
-    }
-    body.light-chart .live-price-box {
-      background: #ffffff;
-      border-color: rgba(0, 0, 0, 0.14);
-    }
-    body.light-chart .live-price {
-      color: #000000 !important;
-    }
-    body.light-chart .tf-bar {
-      background: #eef2f6;
-      border-color: rgba(0, 0, 0, 0.1);
-    }
-    body.light-chart .tf-btn {
-      color: #475569;
-    }
+    body.light-chart .select-dark option { background: #ffffff; color: #0f172a; }
+    body.light-chart .live-price-box { background: #ffffff; border-color: rgba(0, 0, 0, 0.14); }
+    body.light-chart .live-price { color: #000000 !important; }
+    body.light-chart .tf-bar { background: #eef2f6; border-color: rgba(0, 0, 0, 0.1); }
+    body.light-chart .tf-btn { color: #475569; }
     body.light-chart .tf-btn.active,
-    body.light-chart .tf-btn:hover {
-      background: #0f172a;
-      color: #ffffff;
-    }
-    body.light-chart .mini-btn {
-      background: #ffffff;
-      border-color: rgba(0, 0, 0, 0.15);
-      color: #334155;
-    }
-    body.light-chart .mini-btn.on {
-      background: #0f172a;
-      border-color: #0f172a;
-      color: #ffffff;
-    }
-    body.light-chart .tool-btn {
-      color: #334155;
-    }
-    body.light-chart .tool-btn:hover {
-      background: rgba(0, 0, 0, 0.06);
-      color: #000000;
-    }
-    body.light-chart .tool-btn.active {
-      background: #0f172a;
-      border-color: #0f172a;
-      color: #ffffff;
-    }
-    body.light-chart .chart-stage {
-      background: #ffffff;
-    }
-    body.light-chart .chart-watermark {
-      color: rgba(0, 0, 0, 0.34);
-    }
+    body.light-chart .tf-btn:hover { background: #0f172a; color: #ffffff; }
+    body.light-chart .mini-btn { background: #ffffff; border-color: rgba(0, 0, 0, 0.15); color: #334155; }
+    body.light-chart .mini-btn.on { background: #0f172a; border-color: #0f172a; color: #ffffff; }
+    body.light-chart .tool-btn { color: #334155; }
+    body.light-chart .tool-btn:hover { background: rgba(0, 0, 0, 0.06); color: #000000; }
+    body.light-chart .tool-btn.active { background: #0f172a; border-color: #0f172a; color: #ffffff; }
+    body.light-chart .chart-stage { background: #ffffff; }
+    body.light-chart .chart-watermark { color: rgba(0, 0, 0, 0.34); }
     body.light-chart .trend-badge {
       background: rgba(255, 255, 255, 0.9);
       border-color: rgba(0, 0, 0, 0.15);
@@ -601,7 +678,6 @@
     }
 
     #hud-drawer.open { display: flex; }
-
     .hud-head-mobile { display: none; }
 
     .hud-section {
@@ -650,9 +726,7 @@
     body.mobile-mode .card-desc { font-size: 0.74rem; line-height: 1.38; }
 
     body.mobile-mode .desktop-header,
-    body.mobile-mode .draw-sidebar {
-      display: none !important;
-    }
+    body.mobile-mode .draw-sidebar { display: none !important; }
 
     body.mobile-mode .mobile-header {
       display: flex;
@@ -786,22 +860,22 @@
           <span id="pov-label">Auto POV</span>
         </button>
         <div class="status-pill hide-on-phone">
-          <span>Zero Source Exposure</span>
+          <span>🔒 Members Access</span>
         </div>
       </div>
     </header>
 
     <section class="hero">
-      <div class="hero-tag">XAUUSD Terminal • Trinity M35 &amp; M36</div>
+      <div class="hero-tag">Catella Family Exclusive • XAUUSD Terminal</div>
       <h1>Next-Gen <span>GG SMC XAUUSD</span> Institutional Chart</h1>
       <p>
         Powered by <strong>GG SMC @ Catella Family</strong>. Live <strong>XAUUSD (M5)</strong> candlesticks
         with real-time <strong>BOS, CHoCH, Sweep (x), Volumetric Order Blocks, and Fair Value Gaps</strong>
-        computed privately on our server.
+        protected behind member access.
       </p>
 
       <button class="btn-primary" onclick="enterPlatform()">
-        <span>Enter Platform Chart</span>
+        <span>🔒 Enter Platform Chart</span>
         <span>→</span>
       </button>
 
@@ -822,9 +896,9 @@
           <div class="card-desc">Switch Dark or White/Black candles with black crosshair, plus toggle Grid ON/OFF.</div>
         </div>
         <div class="glass-card">
-          <div class="card-kicker">IP Protection</div>
-          <div class="card-title">100% Hidden Code</div>
-          <div class="card-desc">All GG SMC logic runs privately on Render—never exposed in browser.</div>
+          <div class="card-kicker">Member Gate</div>
+          <div class="card-title">Password Protected</div>
+          <div class="card-desc">Requires Catella Family password before opening the live platform terminal.</div>
         </div>
       </div>
     </section>
@@ -833,6 +907,46 @@
       GG SMC @ Catella Family • GG SMC Concept aka catella • Always Use Stop Loss
     </footer>
   </main>
+
+  <!-- ================= PASSWORD ACCESS GATE MODAL ================= -->
+  <div id="auth-modal" onclick="if(event.target===this) closeAuthModal()">
+    <div class="auth-card" id="auth-card">
+      <div class="auth-head">
+        <div class="auth-lock-icon">🔒</div>
+        <div>
+          <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.05rem;color:#ffffff;">
+            Catella Family Access
+          </h3>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">
+            Enter password to unlock GG SMC XAUUSD Chart
+          </p>
+        </div>
+      </div>
+
+      <form onsubmit="submitPassword(event)">
+        <div class="auth-input-wrap">
+          <input
+            type="password"
+            id="auth-password"
+            class="auth-input"
+            placeholder="Enter access password..."
+            autocomplete="off"
+            required
+          />
+          <button type="button" class="eye-btn" onclick="togglePassVisibility()" id="eye-btn" title="Show/Hide">👁</button>
+        </div>
+        <div class="auth-error" id="auth-error" style="margin-top:8px;">
+          Incorrect password. Access denied.
+        </div>
+        <div class="auth-actions" style="margin-top:14px;">
+          <button type="button" class="btn-cancel" onclick="closeAuthModal()">Cancel</button>
+          <button type="submit" class="btn-primary" style="flex:1;padding:12px 16px;font-size:0.95rem;">
+            Unlock Chart →
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ================= PLATFORM CHART VIEW ================= -->
   <section id="platform-view" aria-hidden="true">
@@ -891,6 +1005,7 @@
         <button class="mini-btn" onclick="toggleHud()">Checklist</button>
         <button class="mini-btn" onclick="togglePOVManual()" title="Switch Phone/Desktop POV">📱</button>
         <button class="mini-btn" onclick="fetchChartData(true)" title="Refresh">↻</button>
+        <button class="mini-btn" onclick="lockPlatform()" title="Lock Platform">🔒</button>
         <button class="mini-btn" onclick="exitPlatform()">← Home</button>
       </div>
     </header>
@@ -920,7 +1035,7 @@
           </svg>
         </button>
         <button class="mini-btn" style="padding:5px 7px;" onclick="toggleHud()">M35</button>
-        <button class="mini-btn" style="padding:5px 7px;" onclick="fetchChartData(true)">↻</button>
+        <button class="mini-btn" style="padding:5px 7px;" onclick="lockPlatform()" title="Lock">🔒</button>
       </div>
     </header>
 
@@ -1018,6 +1133,7 @@
         <button class="mini-btn layer-btn on" data-layer="ms" onclick="toggleLayer('ms')">MS</button>
         <button class="mini-btn layer-btn on" data-layer="ob" onclick="toggleLayer('ob')">OB</button>
         <button class="mini-btn layer-btn" data-layer="fvg" onclick="toggleLayer('fvg')">FVG</button>
+        <button class="mini-btn" onclick="fetchChartData(true)">↻</button>
         <button class="mini-btn" onclick="togglePOVManual()">🖥️</button>
       </div>
       <div class="dock-row-2">
@@ -1034,6 +1150,7 @@
 
   <script>
     const API_BASE = "https://smc-ai-a4mq.onrender.com";
+    const ACCESS_TOKEN = "Y2F0MTIz";
 
     let currentSymbol = "XAUUSD";
     let currentTf = "5m";
@@ -1051,6 +1168,64 @@
     let activeTool = "cursor";
     let userDrawings = [];
     let draftDraw = null;
+
+    function isUnlocked() {
+      return sessionStorage.getItem("gg_smc_unlocked") === ACCESS_TOKEN;
+    }
+
+    function openAuthModal() {
+      const modal = document.getElementById("auth-modal");
+      const input = document.getElementById("auth-password");
+      const err = document.getElementById("auth-error");
+      err.classList.remove("show");
+      input.value = "";
+      modal.classList.add("open");
+      setTimeout(() => input.focus(), 80);
+    }
+
+    function closeAuthModal() {
+      document.getElementById("auth-modal").classList.remove("open");
+    }
+
+    function togglePassVisibility() {
+      const input = document.getElementById("auth-password");
+      const btn = document.getElementById("eye-btn");
+      const isHidden = input.type === "password";
+      input.type = isHidden ? "text" : "password";
+      btn.textContent = isHidden ? "🙈" : "👁";
+    }
+
+    function submitPassword(e) {
+      e.preventDefault();
+      const input = document.getElementById("auth-password");
+      const card = document.getElementById("auth-card");
+      const err = document.getElementById("auth-error");
+
+      let encoded = "";
+      try { encoded = btoa(input.value); } catch (ex) { encoded = ""; }
+
+      if (encoded === ACCESS_TOKEN) {
+        sessionStorage.setItem("gg_smc_unlocked", ACCESS_TOKEN);
+        err.classList.remove("show");
+        closeAuthModal();
+        launchPlatform();
+      } else {
+        err.classList.add("show");
+        card.classList.remove("shake");
+        void card.offsetWidth;
+        card.classList.add("shake");
+        input.focus();
+      }
+    }
+
+    function lockPlatform() {
+      sessionStorage.removeItem("gg_smc_unlocked");
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+      exitPlatform();
+    }
 
     function isPhoneBrowser() {
       const ua = navigator.userAgent || "";
@@ -1139,7 +1314,6 @@
         timeScale: { borderColor: borderCol },
       });
 
-      // Light mode = Classic White & Black Candles; Dark mode = Emerald & Crimson Candles
       if (isLightTheme) {
         candleSeries.applyOptions({
           upColor: "#ffffff",
@@ -1162,6 +1336,18 @@
     }
 
     function enterPlatform() {
+      if (!isUnlocked()) {
+        openAuthModal();
+        return;
+      }
+      launchPlatform();
+    }
+
+    function launchPlatform() {
+      if (!isUnlocked()) {
+        openAuthModal();
+        return;
+      }
       document.getElementById("home-view").style.display = "none";
       const p = document.getElementById("platform-view");
       p.classList.add("active");
@@ -1172,9 +1358,15 @@
         initChart();
         fetchChartData(true);
         startSyncLoop();
-        pollTimer = setInterval(() => fetchChartData(false), 12000);
       } else {
+        fetchChartData(false);
         setTimeout(resizeCanvases, 60);
+      }
+
+      if (!pollTimer) {
+        pollTimer = setInterval(() => {
+          if (isUnlocked()) fetchChartData(false);
+        }, 12000);
       }
     }
 
@@ -1198,6 +1390,7 @@
     }
 
     function changeSymbol(sym) {
+      if (!isUnlocked()) return;
       currentSymbol = sym;
       document.querySelectorAll(".symbol-select").forEach(sel => { sel.value = sym; });
       userDrawings = [];
@@ -1206,6 +1399,7 @@
 
     document.querySelectorAll(".tf-btn[data-tf]").forEach(btn => {
       btn.addEventListener("click", () => {
+        if (!isUnlocked()) return;
         currentTf = btn.dataset.tf;
         document.querySelectorAll(".tf-btn[data-tf]").forEach(b => {
           b.classList.toggle("active", b.dataset.tf === currentTf);
@@ -1309,7 +1503,7 @@
 
     function startSyncLoop() {
       function tick() {
-        if (chart && candleSeries && smcData && smcData.candles && smcData.candles.length > 1) {
+        if (isUnlocked() && chart && candleSeries && smcData && smcData.candles && smcData.candles.length > 1) {
           const stage = document.getElementById("chart-stage");
           const ts = chart.timeScale();
           const lastIdx = smcData.candles.length - 1;
@@ -1378,6 +1572,7 @@
     }
 
     async function fetchChartData(showSkeleton) {
+      if (!isUnlocked()) return;
       const sk = document.getElementById("chart-skeleton");
       const skStatus = document.getElementById("sk-status");
       if (showSkeleton) {
