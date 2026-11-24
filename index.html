@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>GG SMC @ Catella Family — XAUUSD Smart Money Terminal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,7 +20,7 @@
       --text-muted: #8b95a7;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     html, body {
       height: 100%;
@@ -29,6 +29,7 @@
       color: var(--text-main);
       font-family: "Inter", system-ui, sans-serif;
       overflow-x: hidden;
+      overscroll-behavior: none;
     }
 
     .web3-bg {
@@ -56,15 +57,15 @@
     .brand-logo {
       display: inline-flex;
       align-items: center;
-      gap: 11px;
+      gap: 10px;
       text-decoration: none;
       color: var(--text-main);
     }
 
     .logo-emblem {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
       background: linear-gradient(135deg, rgba(245, 185, 66, 0.2), rgba(8, 153, 129, 0.22));
       border: 1px solid rgba(245, 185, 66, 0.45);
       display: grid;
@@ -78,7 +79,7 @@
     .logo-title {
       font-family: "Space Grotesk", sans-serif;
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       letter-spacing: 0.04em;
       background: linear-gradient(90deg, #ffffff, #f5b942);
       -webkit-background-clip: text;
@@ -86,7 +87,7 @@
     }
 
     .logo-sub {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--emerald);
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -98,17 +99,18 @@
       position: relative;
       z-index: 2;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 24px clamp(18px, 5vw, 56px);
+      padding: max(20px, env(safe-area-inset-top)) clamp(16px, 5vw, 56px) max(20px, env(safe-area-inset-bottom));
     }
 
     .home-nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
@@ -116,12 +118,12 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 14px;
+      padding: 7px 12px;
       border-radius: 999px;
       background: var(--bg-card);
       border: 1px solid var(--border-glass);
       backdrop-filter: blur(14px);
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
     }
 
@@ -141,29 +143,29 @@
 
     .hero {
       max-width: 1080px;
-      margin: 36px auto;
+      margin: 28px auto;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 18px;
     }
 
     .hero-tag {
-      padding: 6px 16px;
+      padding: 6px 14px;
       border-radius: 999px;
       background: rgba(245, 185, 66, 0.1);
       border: 1px solid rgba(245, 185, 66, 0.34);
       color: var(--gold);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
     .hero h1 {
       font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(2.1rem, 5.2vw, 3.9rem);
+      font-size: clamp(1.9rem, 5.2vw, 3.9rem);
       line-height: 1.08;
       letter-spacing: -0.02em;
       max-width: 860px;
@@ -177,19 +179,19 @@
 
     .hero p {
       color: var(--text-muted);
-      font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+      font-size: clamp(0.9rem, 1.8vw, 1.08rem);
       max-width: 680px;
-      line-height: 1.65;
+      line-height: 1.6;
     }
 
     .btn-primary {
       appearance: none;
       border: none;
       cursor: pointer;
-      padding: 15px 32px;
+      padding: 15px 30px;
       border-radius: 14px;
       font-family: "Space Grotesk", sans-serif;
-      font-size: 1.02rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #04100d;
       background: linear-gradient(135deg, #f5b942, #18d4a7);
@@ -200,49 +202,43 @@
       gap: 10px;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 42px rgba(8, 153, 129, 0.52), 0 0 32px rgba(245, 185, 66, 0.36);
-    }
+    .btn-primary:hover { transform: translateY(-2px); }
 
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
+      gap: 14px;
       width: 100%;
       max-width: 1040px;
-      margin-top: 22px;
+      margin-top: 18px;
     }
 
     .glass-card {
       text-align: left;
-      padding: 20px;
-      border-radius: 18px;
+      padding: 18px;
+      border-radius: 16px;
       background: var(--bg-card);
       border: 1px solid var(--border-glass);
       backdrop-filter: blur(16px);
-      transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
-    .glass-card:hover { transform: translateY(-3px); border-color: rgba(8, 153, 129, 0.5); }
-
     .card-kicker {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--gold);
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
-    .card-title { font-family: "Space Grotesk", sans-serif; font-size: 1.04rem; margin-bottom: 6px; }
-    .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+    .card-title { font-family: "Space Grotesk", sans-serif; font-size: 1rem; margin-bottom: 5px; }
+    .card-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.48; }
 
     .home-footer {
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
-      padding-top: 16px;
+      padding-top: 14px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -251,51 +247,73 @@
       display: none;
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
       z-index: 10;
       background: #0a0c12;
       flex-direction: column;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     #platform-view.active { display: flex; }
 
     .platform-header {
-      height: 54px;
-      padding: 0 12px;
+      padding: 8px 10px;
       background: rgba(11, 14, 22, 0.98);
       border-bottom: 1px solid var(--border-glass);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
-      overflow-x: auto;
+      flex-wrap: wrap;
     }
 
-    .header-group { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .header-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      max-width: 100%;
+    }
+    .header-group::-webkit-scrollbar { display: none; }
 
     .select-dark {
       background: rgba(255, 255, 255, 0.05);
       color: var(--gold);
       border: 1px solid rgba(245, 185, 66, 0.35);
       border-radius: 8px;
-      padding: 6px 10px;
+      padding: 6px 8px;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       outline: none;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .select-dark option { background: #0e131f; color: #f3f5f9; }
 
-    .tf-bar { display: inline-flex; gap: 3px; background: rgba(255, 255, 255, 0.03); padding: 3px; border-radius: 8px; border: 1px solid var(--border-glass); }
+    .tf-bar {
+      display: inline-flex;
+      gap: 2px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border-glass);
+      flex-shrink: 0;
+    }
 
     .tf-btn {
       border: none;
       background: transparent;
       color: var(--text-muted);
-      padding: 5px 8px;
+      padding: 5px 7px;
       border-radius: 6px;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
       cursor: pointer;
     }
@@ -305,17 +323,18 @@
     .mini-btn {
       appearance: none;
       cursor: pointer;
-      padding: 6px 10px;
+      padding: 6px 9px;
       border-radius: 8px;
       border: 1px solid var(--border-glass);
       background: rgba(255, 255, 255, 0.04);
       color: var(--text-muted);
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .mini-btn.on { border-color: rgba(8, 153, 129, 0.65); color: #5eead4; background: rgba(8, 153, 129, 0.16); }
@@ -324,13 +343,14 @@
     .live-price-box {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       font-family: "Space Grotesk", sans-serif;
-      font-size: 0.85rem;
-      padding: 4px 10px;
+      font-size: 0.8rem;
+      padding: 4px 8px;
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-glass);
+      flex-shrink: 0;
     }
 
     .workspace {
@@ -338,24 +358,28 @@
       display: flex;
       min-height: 0;
       position: relative;
+      overflow: hidden;
     }
 
     .draw-sidebar {
-      width: 48px;
+      width: 44px;
       background: rgba(11, 14, 22, 0.98);
       border-right: 1px solid var(--border-glass);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px 0;
-      gap: 8px;
+      padding: 8px 0;
+      gap: 6px;
       flex-shrink: 0;
       z-index: 15;
+      overflow-y: auto;
+      scrollbar-width: none;
     }
+    .draw-sidebar::-webkit-scrollbar { display: none; }
 
     .tool-btn {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
       border: 1px solid transparent;
       background: transparent;
@@ -364,6 +388,7 @@
       display: grid;
       place-items: center;
       font-size: 0.85rem;
+      flex-shrink: 0;
       transition: all 0.15s ease;
     }
 
@@ -376,42 +401,51 @@
       min-width: 0;
       min-height: 0;
       background: #0a0c12;
+      overflow: hidden;
     }
 
     #lwc-container { position: absolute; inset: 0; z-index: 1; }
     #smc-canvas { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
-    #draw-canvas { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+    #draw-canvas { position: absolute; inset: 0; z-index: 6; pointer-events: none; touch-action: none; }
 
     .chart-watermark {
       position: absolute;
-      right: 76px;
-      bottom: 34px;
+      right: 70px;
+      bottom: 30px;
       z-index: 4;
       pointer-events: none;
       font-family: "Space Grotesk", sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
       letter-spacing: 0.04em;
       color: rgba(243, 245, 249, 0.35);
       user-select: none;
+      white-space: nowrap;
     }
 
     .trend-badge {
       position: absolute;
-      top: 12px;
-      left: 14px;
+      top: 10px;
+      left: 10px;
       z-index: 7;
       pointer-events: none;
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 10px;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 9px;
       background: rgba(11, 14, 22, 0.78);
       border: 1px solid var(--border-glass);
       backdrop-filter: blur(8px);
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
+      max-width: calc(100% - 85px);
+    }
+
+    #trend-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* ================= SKELETON LOADER ================= */
@@ -435,19 +469,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 20px;
     }
 
     .sk-candles {
       display: flex;
       align-items: flex-end;
       gap: 10px;
-      height: 50%;
+      height: 48%;
       opacity: 0.45;
     }
 
     .sk-candle {
-      width: 12px;
+      width: 11px;
       border-radius: 3px;
       background: linear-gradient(90deg, #161b26 25%, #232b3d 50%, #161b26 75%);
       background-size: 200% 100%;
@@ -460,17 +494,18 @@
       flex-direction: column;
       align-items: center;
       gap: 10px;
-      padding: 20px 28px;
+      padding: 18px 24px;
       border-radius: 16px;
-      background: rgba(11, 14, 22, 0.9);
+      background: rgba(11, 14, 22, 0.92);
       border: 1px solid rgba(245, 185, 66, 0.38);
       backdrop-filter: blur(12px);
       text-align: center;
+      max-width: 90%;
     }
 
     .sk-spinner {
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       border: 3px solid rgba(245, 185, 66, 0.2);
       border-top-color: var(--gold);
@@ -482,7 +517,8 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     #hud-drawer {
-      width: 285px;
+      width: 280px;
+      max-width: 82vw;
       background: rgba(11, 14, 22, 0.98);
       border-left: 1px solid var(--border-glass);
       padding: 14px;
@@ -505,7 +541,7 @@
 
     .hud-section h4 {
       font-family: "Space Grotesk", sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--gold);
       margin-bottom: 8px;
       text-transform: uppercase;
@@ -523,9 +559,45 @@
 
     .hud-check input { accent-color: var(--emerald); margin-top: 2px; }
 
-    @media (max-width: 768px) {
+    /* ================= MOBILE OPTIMIZATIONS (iPhone & Android) ================= */
+    @media (max-width: 820px) {
       .hide-mobile { display: none; }
-      #hud-drawer { position: absolute; right: 0; top: 0; bottom: 0; }
+      .platform-header {
+        padding: 6px 8px;
+        gap: 6px;
+      }
+      .header-group {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .draw-sidebar {
+        width: 38px;
+        padding: 6px 0;
+        gap: 5px;
+      }
+      .tool-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.82rem;
+      }
+      .trend-badge {
+        top: 8px;
+        left: 8px;
+        font-size: 0.67rem;
+        padding: 4px 8px;
+        max-width: calc(100% - 72px);
+      }
+      .chart-watermark {
+        right: 60px;
+        bottom: 26px;
+        font-size: 0.7rem;
+      }
+      #hud-drawer {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
     }
   </style>
 </head>
@@ -537,7 +609,7 @@
     <header class="home-nav">
       <a href="#" class="brand-logo">
         <div class="logo-emblem" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M6 16V8M6 5V7M6 17V19" stroke="#f23645" stroke-width="2" stroke-linecap="round"/>
             <rect x="4" y="8" width="4" height="7" rx="1" fill="#f23645"/>
             <path d="M12 18V6M12 3V5M12 19V21" stroke="#f5b942" stroke-width="2" stroke-linecap="round"/>
@@ -564,7 +636,7 @@
       <p>
         Powered by <strong>GG SMC @ Catella Family</strong>. Live <strong>XAUUSD (M5)</strong> candlesticks
         with real-time <strong>BOS, CHoCH, Sweep (x), Volumetric Order Blocks, and Fair Value Gaps</strong>
-        computed securely on our private server—with zero indicator source code exposed.
+        computed securely on our private server—optimized for Desktop, Android &amp; iPhone.
       </p>
 
       <button class="btn-primary" onclick="enterPlatform()">
@@ -576,7 +648,7 @@
         <div class="glass-card">
           <div class="card-kicker">Market Structure</div>
           <div class="card-title">BOS, CHoCH &amp; Sweep (x)</div>
-          <div class="card-desc">Automatic swing detection, liquidity sweep markers, and structural bubbles directly on your chart.</div>
+          <div class="card-desc">Automatic swing detection, liquidity sweep markers, and structural bubbles synced in real time.</div>
         </div>
         <div class="glass-card">
           <div class="card-kicker">Order Blocks</div>
@@ -584,9 +656,9 @@
           <div class="card-desc">Live mitigated-filtered Order Blocks with buy/sell activity bars, mid-line, and volume % metrics.</div>
         </div>
         <div class="glass-card">
-          <div class="card-kicker">Imbalance Zones</div>
-          <div class="card-title">FVG + Mid-Line Overlay</div>
-          <div class="card-desc">Toggleable Fair Value Gaps with overlap protection and interactive M5 Box / Horizontal Ray / Fibo tools.</div>
+          <div class="card-kicker">Mobile Ready</div>
+          <div class="card-title">Android &amp; iPhone Touch</div>
+          <div class="card-desc">Pinch-to-zoom, vertical price scaling, and touch drawing tools synced smoothly on every frame.</div>
         </div>
         <div class="glass-card">
           <div class="card-kicker">Source Protection</div>
@@ -606,28 +678,37 @@
     <header class="platform-header">
       <div class="header-group">
         <div class="brand-logo" style="cursor:pointer;" onclick="exitPlatform()">
-          <div class="logo-emblem" style="width:30px;height:30px;border-radius:8px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <div class="logo-emblem" style="width:28px;height:28px;border-radius:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
               <rect x="4" y="8" width="4" height="7" rx="1" fill="#f23645"/>
               <rect x="10" y="6" width="4" height="10" rx="1" fill="#f5b942"/>
               <rect x="16" y="7" width="4" height="7" rx="1" fill="#089981"/>
             </svg>
           </div>
           <div class="logo-text-wrap hide-mobile">
-            <span class="logo-title" style="font-size:0.86rem;">GG SMC</span>
-            <span class="logo-sub" style="font-size:0.6rem;">@ Catella Family</span>
+            <span class="logo-title" style="font-size:0.84rem;">GG SMC</span>
+            <span class="logo-sub" style="font-size:0.58rem;">@ Catella Family</span>
           </div>
         </div>
 
         <select id="symbol-select" class="select-dark" onchange="changeSymbol(this.value)">
-          <option value="XAUUSD" selected>XAUUSD (Gold)</option>
-          <option value="PAXGUSDT">PAXGUSDT (24/7 Gold)</option>
+          <option value="XAUUSD" selected>XAUUSD</option>
+          <option value="PAXGUSDT">PAXGUSDT (24/7)</option>
           <option value="EURUSD">EURUSD</option>
           <option value="GBPUSD">GBPUSD</option>
           <option value="USDJPY">USDJPY</option>
           <option value="BTCUSDT">BTCUSDT</option>
         </select>
 
+        <div class="live-price-box">
+          <span id="live-price" style="font-weight:700;color:#ffffff;">--</span>
+          <span id="live-chg" style="font-size:0.72rem;color:var(--text-muted);">--</span>
+        </div>
+
+        <button class="mini-btn" style="margin-left:auto;" onclick="exitPlatform()">← Home</button>
+      </div>
+
+      <div class="header-group">
         <div class="tf-bar" id="tf-bar">
           <button class="tf-btn" data-tf="1m">1m</button>
           <button class="tf-btn" data-tf="3m">3m</button>
@@ -638,19 +719,11 @@
           <button class="tf-btn" data-tf="1d">1D</button>
         </div>
 
-        <div class="live-price-box hide-mobile">
-          <span id="live-price" style="font-weight:700;color:#ffffff;">--</span>
-          <span id="live-chg" style="font-size:0.74rem;color:var(--text-muted);">--</span>
-        </div>
-      </div>
-
-      <div class="header-group">
-        <button id="btn-ms" class="mini-btn on" onclick="toggleLayer('ms')">Structure</button>
-        <button id="btn-ob" class="mini-btn on" onclick="toggleLayer('ob')">Order Blocks</button>
+        <button id="btn-ms" class="mini-btn on" onclick="toggleLayer('ms')">MS</button>
+        <button id="btn-ob" class="mini-btn on" onclick="toggleLayer('ob')">OB</button>
         <button id="btn-fvg" class="mini-btn" onclick="toggleLayer('fvg')">FVG</button>
-        <button class="mini-btn" onclick="toggleHud()">Checklist</button>
-        <button class="mini-btn" onclick="fetchChartData(true)">↻</button>
-        <button class="mini-btn" onclick="exitPlatform()">← Home</button>
+        <button class="mini-btn" onclick="toggleHud()">M35/36</button>
+        <button class="mini-btn" onclick="fetchChartData(true)" title="Refresh">↻</button>
       </div>
     </header>
 
@@ -697,11 +770,11 @@
         <canvas id="draw-canvas"></canvas>
 
         <div class="trend-badge" id="trend-badge">
-          <span id="trend-dot" style="width:8px;height:8px;border-radius:50%;background:var(--gold);"></span>
+          <span id="trend-dot" style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;"></span>
           <span id="trend-text">GG SMC • Loading...</span>
         </div>
 
-        <div class="chart-watermark">GG SMC Concept aka catella</div>
+        <div class="chart-watermark" id="chart-watermark">GG SMC Concept aka catella</div>
       </div>
 
       <aside id="hud-drawer">
@@ -737,8 +810,8 @@
     let candleSeries = null;
     let smcData = null;
     let pollTimer = null;
+    let lastSyncSig = "";
 
-    // Matches Pine Script defaults: Structure ON, OB ON, FVG OFF by default (toggleable)
     const layers = { ms: true, ob: true, fvg: false };
     let activeTool = "cursor";
     let userDrawings = [];
@@ -753,7 +826,10 @@
       if (!chart) {
         initChart();
         fetchChartData(true);
+        startSyncLoop();
         pollTimer = setInterval(() => fetchChartData(false), 12000);
+      } else {
+        setTimeout(resizeCanvases, 60);
       }
     }
 
@@ -765,7 +841,7 @@
 
     function toggleHud() {
       document.getElementById("hud-drawer").classList.toggle("open");
-      setTimeout(resizeCanvases, 50);
+      setTimeout(resizeCanvases, 60);
     }
 
     function toggleLayer(name) {
@@ -806,22 +882,41 @@
 
     function initChart() {
       const container = document.getElementById("lwc-container");
+      const isMobile = window.innerWidth <= 820;
+
       chart = LightweightCharts.createChart(container, {
         layout: {
           background: { type: "solid", color: "#0a0c12" },
           textColor: "#9ba4b5",
+          fontSize: isMobile ? 10 : 12,
         },
         grid: {
           vertLines: { color: "rgba(255,255,255,0.035)" },
           horzLines: { color: "rgba(255,255,255,0.035)" },
         },
         crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-        rightPriceScale: { borderColor: "rgba(255,255,255,0.08)" },
+        rightPriceScale: {
+          borderColor: "rgba(255,255,255,0.08)",
+          scaleMargins: { top: 0.12, bottom: 0.12 },
+        },
         timeScale: {
           borderColor: "rgba(255,255,255,0.08)",
           timeVisible: true,
           secondsVisible: false,
-          rightOffset: 16,
+          rightOffset: isMobile ? 8 : 14,
+          barSpacing: isMobile ? 6 : 8,
+        },
+        handleScroll: {
+          mouseWheel: true,
+          pressedMouseMove: true,
+          horzTouchDrag: true,
+          vertTouchDrag: true,
+        },
+        handleScale: {
+          axisPressedMouseMove: { time: true, price: true },
+          axisDoubleClickReset: { time: true, price: true },
+          mouseWheel: true,
+          pinch: true,
         },
         localization: {
           timeFormatter: (t) => {
@@ -848,22 +943,52 @@
       });
 
       chart.timeScale().subscribeVisibleLogicalRangeChange(() => {
-        requestAnimationFrame(() => {
-          renderSmcOverlay();
-          renderDrawOverlay();
-        });
+        lastSyncSig = "";
+        renderSmcOverlay();
+        renderDrawOverlay();
       });
 
       const ro = new ResizeObserver(() => resizeCanvases());
       ro.observe(document.getElementById("chart-stage"));
+      window.addEventListener("orientationchange", () => setTimeout(resizeCanvases, 150));
       resizeCanvases();
       setupDrawingEvents();
+    }
+
+    // Continuous rAF fingerprint sync: locks overlays to BOTH horizontal AND vertical price scaling at 60/120fps
+    function startSyncLoop() {
+      function tick() {
+        if (chart && candleSeries && smcData && smcData.candles && smcData.candles.length > 1) {
+          const stage = document.getElementById("chart-stage");
+          const ts = chart.timeScale();
+          const lastIdx = smcData.candles.length - 1;
+          const lastC = smcData.candles[lastIdx];
+
+          const xA = ts.logicalToCoordinate(0);
+          const xB = ts.logicalToCoordinate(lastIdx);
+          const yA = candleSeries.priceToCoordinate(lastC.high);
+          const yB = candleSeries.priceToCoordinate(lastC.low - 1);
+          const pw = chart.priceScale("right").width();
+          const th = ts.height();
+
+          const sig = `${stage.clientWidth}|${stage.clientHeight}|${xA}|${xB}|${yA}|${yB}|${pw}|${th}`;
+          if (sig !== lastSyncSig) {
+            lastSyncSig = sig;
+            renderSmcOverlay();
+            renderDrawOverlay();
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     }
 
     function resizeCanvases() {
       const stage = document.getElementById("chart-stage");
       const w = stage.clientWidth;
       const h = stage.clientHeight;
+      if (!w || !h) return;
+
       if (chart) chart.resize(w, h);
 
       const dpr = window.devicePixelRatio || 1;
@@ -874,8 +999,32 @@
         cvs.style.width = w + "px";
         cvs.style.height = h + "px";
       }
+      lastSyncSig = "";
       renderSmcOverlay();
       renderDrawOverlay();
+    }
+
+    function getPlotBounds(w, h) {
+      let priceW = 62;
+      let timeH = 26;
+      try {
+        const pw = chart.priceScale("right").width();
+        const th = chart.timeScale().height();
+        if (pw > 10) priceW = pw;
+        if (th > 10) timeH = th;
+      } catch (e) {}
+
+      // Keep watermark aligned neatly inside bottom-right of plot area
+      const wm = document.getElementById("chart-watermark");
+      if (wm) {
+        wm.style.right = (priceW + 10) + "px";
+        wm.style.bottom = (timeH + 8) + "px";
+      }
+
+      return {
+        plotW: Math.max(0, w - priceW),
+        plotH: Math.max(0, h - timeH),
+      };
     }
 
     async function fetchChartData(showSkeleton) {
@@ -898,7 +1047,8 @@
 
         if (showSkeleton) {
           const total = data.candles.length;
-          chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - 120), to: total + 14 });
+          const visibleBars = window.innerWidth <= 820 ? 65 : 120;
+          chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - visibleBars), to: total + 8 });
         }
 
         document.getElementById("live-price").textContent = Number(data.price).toFixed(decimals);
@@ -911,6 +1061,7 @@
         document.getElementById("trend-text").textContent =
           `${currentSymbol} ${currentTf.toUpperCase()} • ${isBull ? "BULLISH" : "BEARISH"} (${data.last_event}) • ${data.source}`;
 
+        lastSyncSig = "";
         renderSmcOverlay();
         renderDrawOverlay();
         sk.classList.add("hidden");
@@ -934,10 +1085,18 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
 
+      const { plotW, plotH } = getPlotBounds(w, h);
+      if (plotW <= 0 || plotH <= 0) return;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, plotW, plotH);
+      ctx.clip();
+
       const ts = chart.timeScale();
       const lastIdx = smcData.candles.length - 1;
-      const lastCandleX = ts.logicalToCoordinate(lastIdx) ?? (w - 85);
-      const rightEdgeX = w - 62;
+      const lastCandleX = ts.logicalToCoordinate(lastIdx) ?? (plotW - 20);
+      const isMobile = w <= 768;
 
       // 1. Fair Value Gaps (FVG)
       if (layers.fvg && smcData.fvgs) {
@@ -946,7 +1105,7 @@
           const y1 = candleSeries.priceToCoordinate(f.top);
           const y2 = candleSeries.priceToCoordinate(f.btm);
           if (x1 === null || y1 === null || y2 === null) continue;
-          const x2 = Math.max(x1 + 12, lastCandleX);
+          const x2 = Math.max(x1 + 10, lastCandleX);
           const boxTop = Math.min(y1, y2);
           const boxH = Math.max(2, Math.abs(y2 - y1));
 
@@ -966,7 +1125,7 @@
         }
       }
 
-      // 2. Volumetric Order Blocks (Exact Pine Script style: 10% box extend right + 50% buy/sell activity bars + mid-line + metric label)
+      // 2. Volumetric Order Blocks (OB)
       if (layers.ob && smcData.order_blocks) {
         for (const ob of smcData.order_blocks) {
           const x1 = ts.logicalToCoordinate(ob.x1);
@@ -975,13 +1134,11 @@
           const yAvg = candleSeries.priceToCoordinate(ob.avg);
           if (x1 === null || yTop === null || yBtm === null || yAvg === null) continue;
 
-          // Outer OB box extended to right edge (90% transparency = 0.10 alpha)
           const boxTop = Math.min(yTop, yBtm);
           const boxH = Math.max(3, Math.abs(yBtm - yTop));
           ctx.fillStyle = ob.bull ? "rgba(8, 153, 129, 0.10)" : "rgba(242, 54, 69, 0.10)";
-          ctx.fillRect(x1, boxTop, Math.max(10, rightEdgeX - x1), boxH);
+          ctx.fillRect(x1, boxTop, Math.max(10, plotW - x1), boxH);
 
-          // Inner Buy/Sell Volumetric Activity Bars (obactup / obactdn at 50% transparency)
           const xBl = ts.logicalToCoordinate(ob.xlocbl) ?? (x1 + 14);
           const xBr = ts.logicalToCoordinate(ob.xlocbr) ?? (x1 + 10);
 
@@ -994,7 +1151,6 @@
             ctx.fillRect(x1, Math.min(yAvg, yBtm), xBr - x1, Math.max(1, Math.abs(yBtm - yAvg)));
           }
 
-          // Dashed mid-line from OB origin to current bar
           ctx.strokeStyle = ob.bull ? "#089981" : "#f23645";
           ctx.lineWidth = 1;
           ctx.setLineDash([4, 3]);
@@ -1004,11 +1160,17 @@
           ctx.stroke();
           ctx.setLineDash([]);
 
-          // Metric label at last candle (matches Pine's format.volume + %)
           ctx.fillStyle = ob.bull ? "#089981" : "#f23645";
-          ctx.font = "600 11px Inter, sans-serif";
+          ctx.font = isMobile ? "600 9px Inter, sans-serif" : "600 11px Inter, sans-serif";
+          const labelX = Math.max(x1 + 10, lastCandleX) + 6;
+          if (labelX + 75 < plotW) {
+            ctx.textAlign = "left";
+            ctx.fillText(ob.vol_label, labelX, yAvg + 3);
+          } else {
+            ctx.textAlign = "right";
+            ctx.fillText(ob.vol_label, plotW - 6, yAvg + 3);
+          }
           ctx.textAlign = "left";
-          ctx.fillText(ob.vol_label, Math.max(x1 + 12, lastCandleX) + 6, yAvg + 4);
         }
       }
 
@@ -1033,22 +1195,23 @@
           ctx.stroke();
           ctx.setLineDash([]);
 
-          // Origin bubble (matches Pine msbubble = true)
           ctx.fillStyle = s.dir === 1 ? "rgba(8, 153, 129, 0.25)" : "rgba(242, 54, 69, 0.25)";
           ctx.beginPath();
-          ctx.arc(x1, y, 4, 0, Math.PI * 2);
+          ctx.arc(x1, y, isMobile ? 3 : 4, 0, Math.PI * 2);
           ctx.fill();
 
-          // Structure label
           ctx.fillStyle = color;
-          ctx.font = "700 10px Space Grotesk, sans-serif";
+          ctx.font = isMobile ? "700 9px Space Grotesk, sans-serif" : "700 10px Space Grotesk, sans-serif";
           ctx.textAlign = "center";
-          ctx.fillText(s.txt, (x1 + x2) / 2, s.dir === 1 ? y - 5 : y + 12);
+          ctx.fillText(s.txt, (x1 + x2) / 2, s.dir === 1 ? y - 5 : y + 11);
           ctx.textAlign = "left";
         }
       }
+
+      ctx.restore();
     }
 
+    // ================= POINTER EVENTS (Works with Mouse + Android/iPhone Touch) =================
     function setupDrawingEvents() {
       const cvs = document.getElementById("draw-canvas");
 
@@ -1061,8 +1224,12 @@
         return { logical, price };
       }
 
-      cvs.addEventListener("mousedown", (e) => {
+      cvs.addEventListener("pointerdown", (e) => {
         if (activeTool === "cursor") return;
+        e.preventDefault();
+        if (cvs.setPointerCapture) {
+          try { cvs.setPointerCapture(e.pointerId); } catch (err) {}
+        }
         const pt = getCoords(e);
         if (pt.logical === null || pt.price === null) return;
 
@@ -1075,8 +1242,9 @@
         renderDrawOverlay();
       });
 
-      cvs.addEventListener("mousemove", (e) => {
+      cvs.addEventListener("pointermove", (e) => {
         if (!draftDraw) return;
+        e.preventDefault();
         const pt = getCoords(e);
         if (pt.logical === null || pt.price === null) return;
         draftDraw.l2 = pt.logical;
@@ -1084,12 +1252,16 @@
         renderDrawOverlay();
       });
 
-      window.addEventListener("mouseup", () => {
+      function finishDraw() {
         if (!draftDraw) return;
         userDrawings.push(draftDraw);
         draftDraw = null;
         renderDrawOverlay();
-      });
+      }
+
+      cvs.addEventListener("pointerup", finishDraw);
+      cvs.addEventListener("pointercancel", finishDraw);
+      window.addEventListener("pointerup", finishDraw);
     }
 
     function renderDrawOverlay() {
@@ -1103,8 +1275,17 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
 
+      const { plotW, plotH } = getPlotBounds(w, h);
+      if (plotW <= 0 || plotH <= 0) return;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, plotW, plotH);
+      ctx.clip();
+
       const ts = chart.timeScale();
       const all = draftDraw ? [...userDrawings, draftDraw] : userDrawings;
+      const decimals = currentSymbol === "EURUSD" || currentSymbol === "GBPUSD" ? 5 : (currentSymbol === "USDJPY" ? 3 : 2);
 
       for (const d of all) {
         const x1 = ts.logicalToCoordinate(d.l1);
@@ -1116,11 +1297,11 @@
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(x1, y1);
-          ctx.lineTo(w - 60, y1);
+          ctx.lineTo(plotW, y1);
           ctx.stroke();
           ctx.fillStyle = "#f5b942";
           ctx.font = "600 10px Inter, sans-serif";
-          ctx.fillText(d.p1.toFixed(2), x1 + 6, y1 - 4);
+          ctx.fillText(d.p1.toFixed(decimals), Math.max(4, x1 + 6), y1 - 4);
         } else {
           const x2 = ts.logicalToCoordinate(d.l2);
           const y2 = candleSeries.priceToCoordinate(d.p2);
@@ -1162,11 +1343,13 @@
               ctx.stroke();
               ctx.fillStyle = lv.col;
               ctx.font = "600 10px Inter, sans-serif";
-              ctx.fillText(`${lv.label} (${pLv.toFixed(2)})`, leftX + 4, yLv - 3);
+              ctx.fillText(`${lv.label} (${pLv.toFixed(decimals)})`, leftX + 4, yLv - 3);
             }
           }
         }
       }
+
+      ctx.restore();
     }
   </script>
 </body>
