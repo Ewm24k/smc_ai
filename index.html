@@ -333,7 +333,6 @@
       border: 1px solid var(--border-glass);
     }
 
-    /* ================= WORKSPACE & DRAWING TOOLS ================= */
     .workspace {
       flex: 1;
       display: flex;
@@ -383,7 +382,6 @@
     #smc-canvas { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
     #draw-canvas { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
 
-    /* Bottom-right Watermark */
     .chart-watermark {
       position: absolute;
       right: 76px;
@@ -394,7 +392,7 @@
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.04em;
-      color: rgba(243, 245, 249, 0.34);
+      color: rgba(243, 245, 249, 0.35);
       user-select: none;
     }
 
@@ -483,7 +481,6 @@
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ================= HUD DRAWER ================= */
     #hud-drawer {
       width: 285px;
       background: rgba(11, 14, 22, 0.98);
@@ -584,7 +581,7 @@
         <div class="glass-card">
           <div class="card-kicker">Order Blocks</div>
           <div class="card-title">Volumetric OB + % Metrics</div>
-          <div class="card-desc">Live mitigated-filtered Order Blocks with mid-line and institutional volume percentage breakdown.</div>
+          <div class="card-desc">Live mitigated-filtered Order Blocks with buy/sell activity bars, mid-line, and volume % metrics.</div>
         </div>
         <div class="glass-card">
           <div class="card-kicker">Imbalance Zones</div>
@@ -650,7 +647,7 @@
       <div class="header-group">
         <button id="btn-ms" class="mini-btn on" onclick="toggleLayer('ms')">Structure</button>
         <button id="btn-ob" class="mini-btn on" onclick="toggleLayer('ob')">Order Blocks</button>
-        <button id="btn-fvg" class="mini-btn on" onclick="toggleLayer('fvg')">FVG</button>
+        <button id="btn-fvg" class="mini-btn" onclick="toggleLayer('fvg')">FVG</button>
         <button class="mini-btn" onclick="toggleHud()">Checklist</button>
         <button class="mini-btn" onclick="fetchChartData(true)">↻</button>
         <button class="mini-btn" onclick="exitPlatform()">← Home</button>
@@ -658,7 +655,6 @@
     </header>
 
     <div class="workspace">
-      <!-- Interactive Drawing Toolbar -->
       <aside class="draw-sidebar" title="Drawing Tools">
         <button class="tool-btn active" data-tool="cursor" title="Cursor / Pan & Zoom">⌖</button>
         <button class="tool-btn" data-tool="hline" title="Horizontal Ray / Line">―</button>
@@ -670,7 +666,6 @@
       </aside>
 
       <div class="chart-stage" id="chart-stage">
-        <!-- Skeleton Loader -->
         <div id="chart-skeleton">
           <div class="sk-body">
             <div class="sk-canvas">
@@ -706,11 +701,9 @@
           <span id="trend-text">GG SMC • Loading...</span>
         </div>
 
-        <!-- Bottom-Right Watermark -->
         <div class="chart-watermark">GG SMC Concept aka catella</div>
       </div>
 
-      <!-- Checklist HUD -->
       <aside id="hud-drawer">
         <div class="hud-section">
           <h4>Trinity M35 (FVG Filter)</h4>
@@ -736,7 +729,6 @@
   </section>
 
   <script>
-    // Your private Render server URL
     const API_BASE = "https://smc-ai-a4mq.onrender.com";
 
     let currentSymbol = "XAUUSD";
@@ -746,7 +738,8 @@
     let smcData = null;
     let pollTimer = null;
 
-    const layers = { ms: true, ob: true, fvg: true };
+    // Matches Pine Script defaults: Structure ON, OB ON, FVG OFF by default (toggleable)
+    const layers = { ms: true, ob: true, fvg: false };
     let activeTool = "cursor";
     let userDrawings = [];
     let draftDraw = null;
@@ -828,7 +821,7 @@
           borderColor: "rgba(255,255,255,0.08)",
           timeVisible: true,
           secondsVisible: false,
-          rightOffset: 12,
+          rightOffset: 16,
         },
         localization: {
           timeFormatter: (t) => {
@@ -905,7 +898,7 @@
 
         if (showSkeleton) {
           const total = data.candles.length;
-          chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - 110), to: total + 10 });
+          chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - 120), to: total + 14 });
         }
 
         document.getElementById("live-price").textContent = Number(data.price).toFixed(decimals);
@@ -943,7 +936,8 @@
 
       const ts = chart.timeScale();
       const lastIdx = smcData.candles.length - 1;
-      const rightEdgeX = ts.logicalToCoordinate(lastIdx + 8) ?? (w - 70);
+      const lastCandleX = ts.logicalToCoordinate(lastIdx) ?? (w - 85);
+      const rightEdgeX = w - 62;
 
       // 1. Fair Value Gaps (FVG)
       if (layers.fvg && smcData.fvgs) {
@@ -952,16 +946,16 @@
           const y1 = candleSeries.priceToCoordinate(f.top);
           const y2 = candleSeries.priceToCoordinate(f.btm);
           if (x1 === null || y1 === null || y2 === null) continue;
-          const x2 = Math.max(x1 + 20, ts.logicalToCoordinate(f.x2) ?? rightEdgeX);
+          const x2 = Math.max(x1 + 12, lastCandleX);
           const boxTop = Math.min(y1, y2);
           const boxH = Math.max(2, Math.abs(y2 - y1));
 
-          ctx.fillStyle = f.bull ? "rgba(8, 153, 129, 0.16)" : "rgba(242, 54, 69, 0.16)";
+          ctx.fillStyle = f.bull ? "rgba(8, 153, 129, 0.20)" : "rgba(242, 54, 69, 0.20)";
           ctx.fillRect(x1, boxTop, x2 - x1, boxH);
 
           const ym = candleSeries.priceToCoordinate(f.mid);
           if (ym !== null) {
-            ctx.strokeStyle = f.bull ? "rgba(8, 153, 129, 0.7)" : "rgba(242, 54, 69, 0.7)";
+            ctx.strokeStyle = f.bull ? "#089981" : "#f23645";
             ctx.lineWidth = 1;
             ctx.setLineDash([]);
             ctx.beginPath();
@@ -972,35 +966,49 @@
         }
       }
 
-      // 2. Volumetric Order Blocks (OB)
+      // 2. Volumetric Order Blocks (Exact Pine Script style: 10% box extend right + 50% buy/sell activity bars + mid-line + metric label)
       if (layers.ob && smcData.order_blocks) {
         for (const ob of smcData.order_blocks) {
           const x1 = ts.logicalToCoordinate(ob.x1);
-          const y1 = candleSeries.priceToCoordinate(ob.top);
-          const y2 = candleSeries.priceToCoordinate(ob.btm);
-          if (x1 === null || y1 === null || y2 === null) continue;
-          const x2 = Math.max(x1 + 24, rightEdgeX);
-          const boxTop = Math.min(y1, y2);
-          const boxH = Math.max(3, Math.abs(y2 - y1));
+          const yTop = candleSeries.priceToCoordinate(ob.top);
+          const yBtm = candleSeries.priceToCoordinate(ob.btm);
+          const yAvg = candleSeries.priceToCoordinate(ob.avg);
+          if (x1 === null || yTop === null || yBtm === null || yAvg === null) continue;
 
-          ctx.fillStyle = ob.bull ? "rgba(8, 153, 129, 0.14)" : "rgba(242, 54, 69, 0.14)";
-          ctx.fillRect(x1, boxTop, x2 - x1, boxH);
+          // Outer OB box extended to right edge (90% transparency = 0.10 alpha)
+          const boxTop = Math.min(yTop, yBtm);
+          const boxH = Math.max(3, Math.abs(yBtm - yTop));
+          ctx.fillStyle = ob.bull ? "rgba(8, 153, 129, 0.10)" : "rgba(242, 54, 69, 0.10)";
+          ctx.fillRect(x1, boxTop, Math.max(10, rightEdgeX - x1), boxH);
 
-          const ym = candleSeries.priceToCoordinate(ob.avg);
-          if (ym !== null) {
-            ctx.strokeStyle = ob.bull ? "#089981" : "#f23645";
-            ctx.lineWidth = 1;
-            ctx.setLineDash([4, 3]);
-            ctx.beginPath();
-            ctx.moveTo(x1, ym);
-            ctx.lineTo(x2, ym);
-            ctx.stroke();
-            ctx.setLineDash([]);
+          // Inner Buy/Sell Volumetric Activity Bars (obactup / obactdn at 50% transparency)
+          const xBl = ts.logicalToCoordinate(ob.xlocbl) ?? (x1 + 14);
+          const xBr = ts.logicalToCoordinate(ob.xlocbr) ?? (x1 + 10);
 
-            ctx.fillStyle = ob.bull ? "#089981" : "#f23645";
-            ctx.font = "600 10px Inter, sans-serif";
-            ctx.fillText(`OB ${ob.pct}%`, x2 - 48, ym - 4);
+          if (xBl > x1) {
+            ctx.fillStyle = "rgba(8, 153, 129, 0.50)";
+            ctx.fillRect(x1, Math.min(yTop, yAvg), xBl - x1, Math.max(1, Math.abs(yAvg - yTop)));
           }
+          if (xBr > x1) {
+            ctx.fillStyle = "rgba(242, 54, 69, 0.50)";
+            ctx.fillRect(x1, Math.min(yAvg, yBtm), xBr - x1, Math.max(1, Math.abs(yBtm - yAvg)));
+          }
+
+          // Dashed mid-line from OB origin to current bar
+          ctx.strokeStyle = ob.bull ? "#089981" : "#f23645";
+          ctx.lineWidth = 1;
+          ctx.setLineDash([4, 3]);
+          ctx.beginPath();
+          ctx.moveTo(x1, yAvg);
+          ctx.lineTo(Math.max(x1 + 10, lastCandleX), yAvg);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Metric label at last candle (matches Pine's format.volume + %)
+          ctx.fillStyle = ob.bull ? "#089981" : "#f23645";
+          ctx.font = "600 11px Inter, sans-serif";
+          ctx.textAlign = "left";
+          ctx.fillText(ob.vol_label, Math.max(x1 + 12, lastCandleX) + 6, yAvg + 4);
         }
       }
 
@@ -1025,8 +1033,8 @@
           ctx.stroke();
           ctx.setLineDash([]);
 
-          // Origin bubble
-          ctx.fillStyle = s.dir === 1 ? "rgba(8, 153, 129, 0.35)" : "rgba(242, 54, 69, 0.35)";
+          // Origin bubble (matches Pine msbubble = true)
+          ctx.fillStyle = s.dir === 1 ? "rgba(8, 153, 129, 0.25)" : "rgba(242, 54, 69, 0.25)";
           ctx.beginPath();
           ctx.arc(x1, y, 4, 0, Math.PI * 2);
           ctx.fill();
@@ -1041,7 +1049,6 @@
       }
     }
 
-    // ================= USER DRAWING TOOLS (H-Ray, Box, Trend, Fibo) =================
     function setupDrawingEvents() {
       const cvs = document.getElementById("draw-canvas");
 
