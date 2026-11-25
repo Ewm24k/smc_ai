@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 import math
 import os
 import threading
@@ -12,7 +13,7 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN", "").strip()
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 
 MARKET_CACHE = {}
-CACHE_TTL_SEC = 5
+CACHE_TTL_SEC = 3
 
 
 @app.after_request
@@ -108,7 +109,7 @@ MANDATORY COMMUNICATION RULES:
 
 
 # ==============================================================================
-# HIDDEN GG SMC ENGINE (Matches BigBeluga / GG SMC v6 Logic, up to 5000 bars)
+# HIDDEN GG SMC ENGINE + FAST LIVE MT5 / CRYPTO FEED
 # ==============================================================================
 
 def resample_candles(candles, group_size):
@@ -128,6 +129,46 @@ def resample_candles(candles, group_size):
             }
         )
     return out
+
+
+def fetch_biquote_candles(symbol, tf):
+    # biquote supports 1m 5m 15m 30m 1h 4h 1d; resample 1m -> 3m when needed
+    b_tf = "1m" if tf == "3m" else tf
+    limit = 300 if b_tf == "1m" else 500
+    url = f"https://biquote.io/api/{symbol}/ohlc"
+    res = requests.get(url, params={"interval": b_tf, "limit": limit}, timeout=12)
+    res.raise_for_status()
+    data = res.json()
+    bars = data.get("bars", [])
+
+    candles = []
+    seen = set()
+    for b in bars:
+        ot = b.get("openTime")
+        if not ot:
+            continue
+        t_int = int(datetime.fromisoformat(ot.replace("Z", "+00:00")).timestamp())
+        if t_int in seen:
+            continue
+        seen.add(t_int)
+        o = float(b["open"])
+        h = float(b["high"])
+        l = float(b["low"])
+        c = float(b["close"])
+        v = float(b.get("tickVolume") or b.get("volume") or 1.0)
+        candles.append({
+            "time": t_int,
+            "open": o,
+            "high": h,
+            "low": l,
+            "close": c,
+            "volume": v if v > 0 else 1.0,
+        })
+
+    candles.sort(key=lambda x: x["time"])
+    if tf == "3m":
+        candles = resample_candles(candles, 3)
+    return candles
 
 
 def fetch_yahoo_candles(ticker, tf):
@@ -227,31 +268,47 @@ def get_market_candles(symbol, tf):
     now = time.time()
     cached = MARKET_CACHE.get(key)
     if cached and (now - cached["ts"] < CACHE_TTL_SEC):
-        return cached["candles"], cached["source"]
+        return cached["candles"], cached["source"], cached["stream_type"]
 
     symbol_upper = symbol.upper()
     candles = []
     source = ""
+    stream_type = "none"
 
-    if symbol_upper == "XAUUSD":
+    if symbol_upper in ("XAUUSD", "EURUSD", "GBPUSD", "USDJPY"):
         try:
-            candles = fetch_yahoo_candles("GC=F", tf)
-            source = "Gold Futures (GC=F)"
+            candles = fetch_biquote_candles(symbol_upper, tf)
+            source = "MT5 Live Feed"
+            stream_type = "biquote"
         except Exception as e:
-            print(f"Yahoo GC=F error: {e}", flush=True)
-        if len(candles) < 30:
+            print(f"biquote error for {symbol_upper}: {e}", flush=True)
+
+        if len(candles) < 20:
+            try:
+                y_sym = "GC=F" if symbol_upper == "XAUUSD" else f"{symbol_upper}=X"
+                candles = fetch_yahoo_candles(y_sym, tf)
+                source = "Gold Futures (GC=F)" if symbol_upper == "XAUUSD" else f"FX {symbol_upper}"
+                stream_type = "none"
+            except Exception as e:
+                print(f"Yahoo fallback error: {e}", flush=True)
+
+        if len(candles) < 20 and symbol_upper == "XAUUSD":
             candles = fetch_binance_candles("PAXGUSDT", tf)
-            source = "PAXG/USDT Gold Spot (Fallback)"
-    elif symbol_upper in ("EURUSD", "GBPUSD", "USDJPY"):
-        candles = fetch_yahoo_candles(f"{symbol_upper}=X", tf)
-        source = f"FX {symbol_upper}"
+            source = "PAXG/USDT Gold Spot"
+            stream_type = "binance"
     else:
         candles = fetch_binance_candles(symbol_upper, tf)
-        source = f"Spot {symbol_upper}"
+        source = f"Binance {symbol_upper}"
+        stream_type = "binance"
 
-    if len(candles) >= 30:
-        MARKET_CACHE[key] = {"ts": now, "candles": candles, "source": source}
-    return candles, source
+    if len(candles) >= 20:
+        MARKET_CACHE[key] = {
+            "ts": now,
+            "candles": candles,
+            "source": source,
+            "stream_type": stream_type,
+        }
+    return candles, source, stream_type
 
 
 def format_vol(val):
@@ -368,7 +425,7 @@ def update_ob_umt(ob_item):
 def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
     n = len(candles)
     if n < 20:
-        return {"structures": [], "order_blocks": [], "fvgs": [], "trend": 0, "last_event": "N/A"}
+        return {"candles": candles, "structures": [], "order_blocks": [], "fvgs": [], "trend": 0, "last_event": "N/A"}
 
     atr = compute_atr(candles, 200)
 
@@ -723,7 +780,6 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                     brdw[0]["txt"] = "CHoCH"
                     brdw[0]["style"] = "solid"
 
-        # OB mitigation (confirmed bars only, matching barstate.isconfirmed)
         if i < n - 1:
             for idx_ob in range(len(blob) - 1, -1, -1):
                 if min(c, o) < blob[idx_ob]["btm"]:
@@ -738,7 +794,6 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
         for item in brob:
             update_ob_umt(item)
 
-        # FVG detection & mitigation
         if i >= 3:
             h2 = candles[i - 3]["high"]
             l2 = candles[i - 3]["low"]
@@ -773,7 +828,6 @@ def run_gg_smc(candles, mslen=5, swing_limit=100, ob_last=5, fvg_num=5):
                 br_fvg.pop(idx_f)
         check_overlap_fvgs(bl_fvg, br_fvg)
 
-    # Slice latest 1000 candles for fast rendering while preserving full 5000-bar structure coordinates
     view_start = max(0, n - 1000)
 
     final_obs = []
@@ -838,7 +892,7 @@ def api_gg_smc():
         tf = "5m"
 
     try:
-        candles, source = get_market_candles(symbol, tf)
+        candles, source, stream_type = get_market_candles(symbol, tf)
         if len(candles) < 20:
             return jsonify({"ok": False, "error": "Insufficient market candles"}), 502
 
@@ -852,7 +906,9 @@ def api_gg_smc():
             "symbol": symbol,
             "tf": tf,
             "source": source,
+            "stream_type": stream_type,
             "price": last_c["close"],
+            "prev_close": prev_c["close"],
             "change_pct": round(chg_pct, 3),
             "candles": smc["candles"],
             "structures": smc["structures"],
