@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>GG SMC @ Catella Family — XAUUSD Smart Money Terminal</title>
+  <title>GG SMC @ Catella Family — XAUUSD Live Tick Terminal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/11.0.0/signalr.min.js"></script>
   <style>
     :root {
       --bg-void: #05060a;
@@ -106,14 +107,7 @@
       padding: max(18px, env(safe-area-inset-top)) clamp(16px, 5vw, 56px) max(18px, env(safe-area-inset-bottom));
     }
 
-    .home-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
+    .home-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
     .nav-right { display: flex; align-items: center; gap: 8px; }
 
     .status-pill {
@@ -136,12 +130,12 @@
       border-radius: 50%;
       background: var(--emerald);
       box-shadow: 0 0 10px var(--emerald);
-      animation: pulse 1.8s infinite;
+      animation: pulse 1.6s infinite;
     }
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.35); opacity: 0.6; }
+      50% { transform: scale(1.35); opacity: 0.55; }
     }
 
     .hero {
@@ -274,9 +268,7 @@
       gap: 14px;
     }
 
-    .auth-card.shake {
-      animation: shakeAnim 0.35s ease;
-    }
+    .auth-card.shake { animation: shakeAnim 0.35s ease; }
 
     @keyframes shakeAnim {
       0%, 100% { transform: translateX(0); }
@@ -284,11 +276,7 @@
       40%, 80% { transform: translateX(8px); }
     }
 
-    .auth-head {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .auth-head { display: flex; align-items: center; gap: 12px; }
 
     .auth-lock-icon {
       width: 42px;
@@ -302,11 +290,7 @@
       flex-shrink: 0;
     }
 
-    .auth-input-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
+    .auth-input-wrap { position: relative; display: flex; align-items: center; }
 
     .auth-input {
       width: 100%;
@@ -317,12 +301,9 @@
       color: #ffffff;
       font-size: 0.98rem;
       outline: none;
-      transition: border-color 0.2s ease;
     }
 
-    .auth-input:focus {
-      border-color: var(--gold);
-    }
+    .auth-input:focus { border-color: var(--gold); }
 
     .eye-btn {
       position: absolute;
@@ -335,20 +316,9 @@
       padding: 4px 6px;
     }
 
-    .auth-error {
-      display: none;
-      font-size: 0.8rem;
-      color: var(--crimson);
-      font-weight: 600;
-    }
-
+    .auth-error { display: none; font-size: 0.8rem; color: var(--crimson); font-weight: 600; }
     .auth-error.show { display: block; }
-
-    .auth-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 2px;
-    }
+    .auth-actions { display: flex; gap: 10px; }
 
     .btn-cancel {
       appearance: none;
@@ -392,13 +362,7 @@
     }
 
     .mobile-header, .mobile-bottom-dock { display: none; }
-
-    .header-group {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-shrink: 0;
-    }
+    .header-group { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
 
     .select-dark {
       background: rgba(255, 255, 255, 0.06);
@@ -558,7 +522,25 @@
 
     #trend-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    /* ================= LIGHT THEME (Black & White Candles on White Background) ================= */
+    .stream-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(8, 153, 129, 0.2);
+      color: #5eead4;
+      flex-shrink: 0;
+    }
+
+    .stream-pill.closed {
+      background: rgba(245, 185, 66, 0.18);
+      color: #f5b942;
+    }
+
+    /* ================= LIGHT THEME ================= */
     body.light-chart #platform-view { background: #ffffff; }
     body.light-chart .desktop-header,
     body.light-chart .mobile-header,
@@ -572,11 +554,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    body.light-chart .select-dark {
-      background: #ffffff;
-      color: #0f172a;
-      border-color: rgba(0, 0, 0, 0.2);
-    }
+    body.light-chart .select-dark { background: #ffffff; color: #0f172a; border-color: rgba(0, 0, 0, 0.2); }
     body.light-chart .select-dark option { background: #ffffff; color: #0f172a; }
     body.light-chart .live-price-box { background: #ffffff; border-color: rgba(0, 0, 0, 0.14); }
     body.light-chart .live-price { color: #000000 !important; }
@@ -592,10 +570,11 @@
     body.light-chart .chart-stage { background: #ffffff; }
     body.light-chart .chart-watermark { color: rgba(0, 0, 0, 0.34); }
     body.light-chart .trend-badge {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       border-color: rgba(0, 0, 0, 0.15);
       color: #0f172a;
     }
+    body.light-chart .stream-pill { background: rgba(8, 153, 129, 0.14); color: #047857; }
 
     /* ================= SKELETON LOADER ================= */
     #chart-skeleton {
@@ -610,23 +589,9 @@
 
     #chart-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     .sk-body { flex: 1; display: flex; min-height: 0; }
+    .sk-canvas { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; }
 
-    .sk-canvas {
-      flex: 1;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .sk-candles {
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      height: 48%;
-      opacity: 0.45;
-    }
+    .sk-candles { display: flex; align-items: flex-end; gap: 10px; height: 48%; opacity: 0.45; }
 
     .sk-candle {
       width: 11px;
@@ -707,9 +672,7 @@
 
     .hud-check input { accent-color: var(--emerald); margin-top: 2px; }
 
-    /* =========================================================================
-       NATIVE PHONE APP POV STYLE (Auto-activated on Android & iPhone Browsers)
-       ========================================================================= */
+    /* ================= MOBILE PHONE APP POV ================= */
     body.mobile-mode #home-view {
       padding: max(14px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom));
       gap: 12px;
@@ -860,18 +823,17 @@
           <span id="pov-label">Auto POV</span>
         </button>
         <div class="status-pill hide-on-phone">
-          <span>🔒 Members Access</span>
+          <span>⚡ Zero-Lag Live Ticks</span>
         </div>
       </div>
     </header>
 
     <section class="hero">
-      <div class="hero-tag">Catella Family Exclusive • XAUUSD Terminal</div>
-      <h1>Next-Gen <span>GG SMC XAUUSD</span> Institutional Chart</h1>
+      <div class="hero-tag">Catella Family Exclusive • Real-Time MT5 Tick Stream</div>
+      <h1>Zero-Lag <span>GG SMC XAUUSD</span> Live Tick Chart</h1>
       <p>
-        Powered by <strong>GG SMC @ Catella Family</strong>. Live <strong>XAUUSD (M5)</strong> candlesticks
-        with real-time <strong>BOS, CHoCH, Sweep (x), Volumetric Order Blocks, and Fair Value Gaps</strong>
-        protected behind member access.
+        Powered by <strong>GG SMC @ Catella Family</strong>. Real-time WebSocket <strong>XAUUSD &amp; Forex</strong> ticks
+        with instant candle updates plus <strong>BOS, CHoCH, Sweep (x), Volumetric Order Blocks, and FVG</strong>.
       </p>
 
       <button class="btn-primary" onclick="enterPlatform()">
@@ -881,19 +843,19 @@
 
       <div class="cards-grid">
         <div class="glass-card">
+          <div class="card-kicker">Zero-Lag Stream</div>
+          <div class="card-title">Live MT5 Tick Feed</div>
+          <div class="card-desc">WebSocket tick updates for XAUUSD, EURUSD, GBPUSD, USDJPY &amp; 24/7 Crypto.</div>
+        </div>
+        <div class="glass-card">
           <div class="card-kicker">Market Structure</div>
-          <div class="card-title">BOS, CHoCH &amp; (x)</div>
-          <div class="card-desc">Auto swing structure, sweeps, and origin bubbles synced in real time.</div>
+          <div class="card-title">BOS, CHoCH &amp; OB %</div>
+          <div class="card-desc">GG SMC structure &amp; volumetric order blocks recalculated on bar close.</div>
         </div>
         <div class="glass-card">
-          <div class="card-kicker">Order Blocks</div>
-          <div class="card-title">Volumetric OB %</div>
-          <div class="card-desc">Buy/sell activity bars, dashed mid-line, and volume % metrics.</div>
-        </div>
-        <div class="glass-card">
-          <div class="card-kicker">Pro Chart Controls</div>
+          <div class="card-kicker">Pro Controls</div>
           <div class="card-title">B&amp;W Light + Grid</div>
-          <div class="card-desc">Switch Dark or White/Black candles with black crosshair, plus toggle Grid ON/OFF.</div>
+          <div class="card-desc">Dark or White/Black candles with black crosshair, plus Grid ON/OFF toggle.</div>
         </div>
         <div class="glass-card">
           <div class="card-kicker">Member Gate</div>
@@ -968,12 +930,12 @@
         </div>
 
         <select class="select-dark symbol-select" onchange="changeSymbol(this.value)">
-          <option value="XAUUSD" selected>XAUUSD (Gold)</option>
-          <option value="PAXGUSDT">PAXGUSDT (24/7)</option>
-          <option value="EURUSD">EURUSD</option>
-          <option value="GBPUSD">GBPUSD</option>
-          <option value="USDJPY">USDJPY</option>
-          <option value="BTCUSDT">BTCUSDT</option>
+          <option value="XAUUSD" selected>XAUUSD (Live MT5)</option>
+          <option value="EURUSD">EURUSD (Live FX)</option>
+          <option value="GBPUSD">GBPUSD (Live FX)</option>
+          <option value="USDJPY">USDJPY (Live FX)</option>
+          <option value="PAXGUSDT">PAXGUSDT (24/7 Gold)</option>
+          <option value="BTCUSDT">BTCUSDT (24/7)</option>
         </select>
 
         <div class="tf-bar">
@@ -1016,10 +978,10 @@
         <button class="mini-btn" style="padding:6px 7px;" onclick="exitPlatform()">←</button>
         <select class="select-dark symbol-select" style="padding:5px 5px;font-size:0.74rem;" onchange="changeSymbol(this.value)">
           <option value="XAUUSD" selected>XAUUSD</option>
-          <option value="PAXGUSDT">PAXG 24/7</option>
           <option value="EURUSD">EURUSD</option>
           <option value="GBPUSD">GBPUSD</option>
           <option value="USDJPY">USDJPY</option>
+          <option value="PAXGUSDT">PAXG 24/7</option>
           <option value="BTCUSDT">BTCUSDT</option>
         </select>
         <div class="live-price-box" style="padding:4px 6px;font-size:0.72rem;">
@@ -1040,7 +1002,6 @@
     </header>
 
     <div class="workspace">
-      <!-- DESKTOP LEFT DRAWING BAR -->
       <aside class="draw-sidebar" title="Drawing Tools">
         <button class="tool-btn active" data-tool="cursor" title="Cursor / Pan & Zoom">⌖</button>
         <button class="tool-btn" data-tool="hline" title="Horizontal Ray / Line">―</button>
@@ -1071,7 +1032,7 @@
                 <div class="sk-spinner"></div>
                 <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;">GG SMC @ Catella Family</div>
                 <div style="font-size:0.78rem;color:var(--text-muted);" id="sk-status">
-                  Connecting to GG SMC Private Engine (XAUUSD M5)...
+                  Connecting to Live MT5 Tick Stream (XAUUSD M5)...
                 </div>
               </div>
             </div>
@@ -1085,12 +1046,12 @@
         <div class="trend-badge" id="trend-badge">
           <span id="trend-dot" style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;"></span>
           <span id="trend-text">GG SMC • Loading...</span>
+          <span class="stream-pill" id="stream-pill">CONNECTING</span>
         </div>
 
         <div class="chart-watermark" id="chart-watermark">GG SMC Concept aka catella</div>
       </div>
 
-      <!-- CHECKLIST HUD -->
       <aside id="hud-drawer">
         <div class="hud-head-mobile">
           <strong style="font-family:'Space Grotesk',sans-serif;color:var(--gold);font-size:0.9rem;">GG SMC Checklist</strong>
@@ -1152,14 +1113,31 @@
     const API_BASE = "https://smc-ai-a4mq.onrender.com";
     const ACCESS_TOKEN = "Y2F0MTIz";
 
+    const TF_SECONDS = {
+      "1m": 60,
+      "3m": 180,
+      "5m": 300,
+      "15m": 900,
+      "1h": 3600,
+      "4h": 14400,
+      "1d": 86400,
+    };
+
     let currentSymbol = "XAUUSD";
     let currentTf = "5m";
     let chart = null;
     let candleSeries = null;
     let smcData = null;
-    let pollTimer = null;
+    let lastBar = null;
+    let prevBarClose = null;
+    let backupTimer = null;
     let lastSyncSig = "";
     let manualPOV = null;
+
+    // Live WebSocket connections
+    let signalrConn = null;
+    let binanceWs = null;
+    let streamGen = 0;
 
     let isLightTheme = false;
     let isGridOn = true;
@@ -1176,8 +1154,7 @@
     function openAuthModal() {
       const modal = document.getElementById("auth-modal");
       const input = document.getElementById("auth-password");
-      const err = document.getElementById("auth-error");
-      err.classList.remove("show");
+      document.getElementById("auth-error").classList.remove("show");
       input.value = "";
       modal.classList.add("open");
       setTimeout(() => input.focus(), 80);
@@ -1220,9 +1197,10 @@
 
     function lockPlatform() {
       sessionStorage.removeItem("gg_smc_unlocked");
-      if (pollTimer) {
-        clearInterval(pollTimer);
-        pollTimer = null;
+      stopLiveStreams();
+      if (backupTimer) {
+        clearInterval(backupTimer);
+        backupTimer = null;
       }
       exitPlatform();
     }
@@ -1363,10 +1341,10 @@
         setTimeout(resizeCanvases, 60);
       }
 
-      if (!pollTimer) {
-        pollTimer = setInterval(() => {
+      if (!backupTimer) {
+        backupTimer = setInterval(() => {
           if (isUnlocked()) fetchChartData(false);
-        }, 12000);
+        }, 30000);
       }
     }
 
@@ -1394,6 +1372,7 @@
       currentSymbol = sym;
       document.querySelectorAll(".symbol-select").forEach(sel => { sel.value = sym; });
       userDrawings = [];
+      stopLiveStreams();
       fetchChartData(true);
     }
 
@@ -1405,6 +1384,7 @@
           b.classList.toggle("active", b.dataset.tf === currentTf);
         });
         userDrawings = [];
+        stopLiveStreams();
         fetchChartData(true);
       });
     });
@@ -1571,12 +1551,38 @@
       };
     }
 
+    function getDecimals(sym) {
+      if (sym === "EURUSD" || sym === "GBPUSD") return 5;
+      if (sym === "USDJPY") return 3;
+      return 2;
+    }
+
+    function updatePriceUI(price, chgPct) {
+      const decimals = getDecimals(currentSymbol);
+      const priceText = Number(price).toFixed(decimals);
+      const chgText = (chgPct >= 0 ? "+" : "") + Number(chgPct).toFixed(2) + "%";
+      const chgColor = chgPct >= 0 ? "#089981" : "#f23645";
+
+      document.querySelectorAll(".live-price").forEach(el => { el.textContent = priceText; });
+      document.querySelectorAll(".live-chg").forEach(el => {
+        el.textContent = chgText;
+        el.style.color = chgColor;
+      });
+    }
+
+    function setStreamStatus(text, isClosed) {
+      const pill = document.getElementById("stream-pill");
+      if (!pill) return;
+      pill.textContent = text;
+      pill.classList.toggle("closed", Boolean(isClosed));
+    }
+
     async function fetchChartData(showSkeleton) {
       if (!isUnlocked()) return;
       const sk = document.getElementById("chart-skeleton");
       const skStatus = document.getElementById("sk-status");
       if (showSkeleton) {
-        skStatus.textContent = `Loading ${currentSymbol} (${currentTf.toUpperCase()}) • GG SMC Private Engine...`;
+        skStatus.textContent = `Loading ${currentSymbol} (${currentTf.toUpperCase()}) • Live Tick Engine...`;
         sk.classList.remove("hidden");
       }
 
@@ -1586,9 +1592,12 @@
         if (!data.ok) throw new Error(data.error || "API error");
 
         smcData = data;
-        const decimals = currentSymbol === "EURUSD" || currentSymbol === "GBPUSD" ? 5 : (currentSymbol === "USDJPY" ? 3 : 2);
+        const decimals = getDecimals(currentSymbol);
         candleSeries.applyOptions({ priceFormat: { type: "price", precision: decimals, minMove: Math.pow(10, -decimals) } });
         candleSeries.setData(data.candles);
+
+        lastBar = { ...data.candles[data.candles.length - 1] };
+        prevBarClose = data.prev_close || data.candles[data.candles.length - 2]?.close || lastBar.close;
 
         if (showSkeleton) {
           const total = data.candles.length;
@@ -1597,15 +1606,7 @@
           chart.timeScale().setVisibleLogicalRange({ from: Math.max(0, total - visibleBars), to: total + 6 });
         }
 
-        const priceText = Number(data.price).toFixed(decimals);
-        const chgText = (data.change_pct >= 0 ? "+" : "") + data.change_pct.toFixed(2) + "%";
-        const chgColor = data.change_pct >= 0 ? "#089981" : "#f23645";
-
-        document.querySelectorAll(".live-price").forEach(el => { el.textContent = priceText; });
-        document.querySelectorAll(".live-chg").forEach(el => {
-          el.textContent = chgText;
-          el.style.color = chgColor;
-        });
+        updatePriceUI(data.price, data.change_pct);
 
         const isBull = data.trend === 1;
         document.getElementById("trend-dot").style.background = isBull ? "#089981" : "#f23645";
@@ -1616,12 +1617,165 @@
         renderSmcOverlay();
         renderDrawOverlay();
         sk.classList.add("hidden");
+
+        connectLiveStream(data.stream_type, currentSymbol, currentTf);
       } catch (err) {
         console.error(err);
         if (showSkeleton) {
           skStatus.textContent = "Waking up Render server (~45s on free tier)... retrying...";
           setTimeout(() => fetchChartData(true), 4000);
         }
+      }
+    }
+
+    // =========================================================================
+    // ZERO-LAG DIRECT WEBSOCKET LIVE TICK ENGINE (biquote MT5 + Binance Spot)
+    // =========================================================================
+    function stopLiveStreams() {
+      streamGen++;
+      if (signalrConn) {
+        try { signalrConn.stop(); } catch (e) {}
+        signalrConn = null;
+      }
+      if (binanceWs) {
+        try { binanceWs.close(); } catch (e) {}
+        binanceWs = null;
+      }
+    }
+
+    function connectLiveStream(streamType, symbol, tf) {
+      // Avoid tearing down active socket if already streaming same symbol & type
+      if (streamType === "biquote" && signalrConn && signalrConn._ggSymbol === symbol) return;
+      if (streamType === "binance" && binanceWs && binanceWs._ggKey === `${symbol}_${tf}`) return;
+
+      stopLiveStreams();
+      const myGen = streamGen;
+
+      if (streamType === "biquote" && typeof signalR !== "undefined") {
+        setStreamStatus("CONNECTING", false);
+        const conn = new signalR.HubConnectionBuilder()
+          .withUrl("https://biquote.io/hubs/tick")
+          .withAutomaticReconnect()
+          .configureLogging(signalR.LogLevel.Error)
+          .build();
+        conn._ggSymbol = symbol;
+        signalrConn = conn;
+
+        conn.on("ReceiveTick", (tick) => {
+          if (myGen !== streamGen || !isUnlocked() || !candleSeries || !lastBar) return;
+          if (!tick || (tick.symbol && tick.symbol.toUpperCase() !== currentSymbol)) return;
+
+          const price = Number(tick.mid ?? ((Number(tick.bid) + Number(tick.ask)) / 2));
+          if (!Number.isFinite(price) || price <= 0) return;
+
+          if (tick.marketState && tick.marketState.toLowerCase() === "closed") {
+            setStreamStatus("MKT CLOSED", true);
+          } else {
+            setStreamStatus("LIVE TICK", false);
+          }
+
+          const tsMs = tick.timestamp ? Date.parse(tick.timestamp) : Date.now();
+          const tickSec = Math.floor((Number.isFinite(tsMs) ? tsMs : Date.now()) / 1000);
+          const tfSec = TF_SECONDS[currentTf] || 300;
+          const bucket = Math.floor(tickSec / tfSec) * tfSec;
+
+          const sameDayCandle = currentTf === "1d" && (tickSec - lastBar.time) < 86400;
+          if (bucket <= lastBar.time || sameDayCandle) {
+            lastBar.high = Math.max(lastBar.high, price);
+            lastBar.low = Math.min(lastBar.low, price);
+            lastBar.close = price;
+            candleSeries.update(lastBar);
+            if (smcData && smcData.candles.length) {
+              smcData.candles[smcData.candles.length - 1] = { ...lastBar };
+            }
+          } else {
+            prevBarClose = lastBar.close;
+            lastBar = {
+              time: bucket,
+              open: price,
+              high: price,
+              low: price,
+              close: price,
+            };
+            candleSeries.update(lastBar);
+            if (smcData && smcData.candles) {
+              smcData.candles.push({ ...lastBar });
+            }
+            // Refresh GG SMC BOS/CHoCH/OB/FVG immediately on new candle open
+            setTimeout(() => {
+              if (myGen === streamGen && isUnlocked()) fetchChartData(false);
+            }, 900);
+          }
+
+          const chgPct = tick.dayDiffPercent != null
+            ? Number(tick.dayDiffPercent)
+            : (prevBarClose ? ((price - prevBarClose) / prevBarClose) * 100 : 0);
+          updatePriceUI(price, chgPct);
+        });
+
+        conn.start()
+          .then(() => {
+            if (myGen !== streamGen) { conn.stop(); return; }
+            setStreamStatus("LIVE TICK", false);
+            return conn.invoke("Subscribe", [symbol]);
+          })
+          .catch((err) => {
+            console.warn("SignalR fallback:", err);
+            setStreamStatus("POLLING", true);
+          });
+
+      } else if (streamType === "binance") {
+        setStreamStatus("CONNECTING", false);
+        const wsTf = tf;
+        const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@kline_${wsTf}`);
+        ws._ggKey = `${symbol}_${tf}`;
+        binanceWs = ws;
+
+        ws.onopen = () => {
+          if (myGen === streamGen) setStreamStatus("LIVE TICK", false);
+        };
+
+        ws.onmessage = (ev) => {
+          if (myGen !== streamGen || !isUnlocked() || !candleSeries) return;
+          const msg = JSON.parse(ev.data);
+          const k = msg.k;
+          if (!k) return;
+
+          const bar = {
+            time: Math.floor(k.t / 1000),
+            open: parseFloat(k.o),
+            high: parseFloat(k.h),
+            low: parseFloat(k.l),
+            close: parseFloat(k.c),
+          };
+          const isNew = lastBar && bar.time > lastBar.time;
+          lastBar = bar;
+          candleSeries.update(bar);
+
+          if (smcData && smcData.candles.length) {
+            if (isNew) {
+              smcData.candles.push({ ...bar });
+            } else {
+              smcData.candles[smcData.candles.length - 1] = { ...bar };
+            }
+          }
+
+          const chgPct = prevBarClose ? ((bar.close - prevBarClose) / prevBarClose) * 100 : 0;
+          updatePriceUI(bar.close, chgPct);
+
+          if (k.x) {
+            prevBarClose = bar.close;
+            setTimeout(() => {
+              if (myGen === streamGen && isUnlocked()) fetchChartData(false);
+            }, 600);
+          }
+        };
+
+        ws.onerror = () => {
+          if (myGen === streamGen) setStreamStatus("POLLING", true);
+        };
+      } else {
+        setStreamStatus("BACKUP FEED", true);
       }
     }
 
@@ -1832,7 +1986,7 @@
 
       const ts = chart.timeScale();
       const all = draftDraw ? [...userDrawings, draftDraw] : userDrawings;
-      const decimals = currentSymbol === "EURUSD" || currentSymbol === "GBPUSD" ? 5 : (currentSymbol === "USDJPY" ? 3 : 2);
+      const decimals = getDecimals(currentSymbol);
       const accentDraw = isLightTheme ? "#b45309" : "#f5b942";
       const trendCol = isLightTheme ? "#0284c7" : "#5eead4";
 
